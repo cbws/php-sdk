@@ -8,19 +8,20 @@
     "packages": [
         {
             "name": "cbws/php-cbws-grpc",
-            "version": "v0.0.8",
+            "version": "v0.0.8.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:cbws/php-cbws-grpc.git",
-                "reference": "dff179b59a83e9a503865cf6aa911cee4041a025"
+                "reference": "c64fc466c58010b9f27a6acd52477065e505b1ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cbws/php-cbws-grpc/zipball/dff179b59a83e9a503865cf6aa911cee4041a025",
-                "reference": "dff179b59a83e9a503865cf6aa911cee4041a025",
+                "url": "https://api.github.com/repos/cbws/php-cbws-grpc/zipball/c64fc466c58010b9f27a6acd52477065e505b1ba",
+                "reference": "c64fc466c58010b9f27a6acd52477065e505b1ba",
                 "shasum": ""
             },
             "require": {
+                "ext-grpc": "^1.29",
                 "google/common-protos": "^1.2",
                 "google/protobuf": "^3.12",
                 "grpc/grpc": "^1.27"
@@ -47,10 +48,10 @@
             ],
             "description": "Generated gRPC client libraries for CBWS",
             "support": {
-                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.0.8",
+                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.0.8.1",
                 "issues": "https://github.com/cbws/php-cbws-grpc/issues"
             },
-            "time": "2020-06-07T12:33:53+00:00"
+            "time": "2020-06-07T13:35:43+00:00"
         },
         {
             "name": "google/common-protos",
@@ -608,20 +609,6 @@
             ],
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-05-27T08:34:37+00:00"
         },
         {
@@ -679,20 +666,6 @@
                 "ctype",
                 "polyfill",
                 "portable"
-            ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-05-12T16:14:59+00:00"
         },
@@ -756,20 +729,6 @@
                 "portable",
                 "shim"
             ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-05-12T16:47:27+00:00"
         },
         {
@@ -829,20 +788,6 @@
                 "portable",
                 "shim"
             ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-05-12T16:47:27+00:00"
         },
         {
@@ -897,20 +842,6 @@
                 "polyfill",
                 "portable",
                 "shim"
-            ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-05-12T16:47:27+00:00"
         },
@@ -975,20 +906,6 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-05-20T17:43:50+00:00"
         }
     ],
@@ -1001,6 +918,5 @@
     "platform": {
         "ext-grpc": "^1.29"
     },
-    "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "platform-dev": []
 }
