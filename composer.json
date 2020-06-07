@@ -1,0 +1,27 @@
+{
+    "name": "cbws/php-cbws",
+    "type": "library",
+    "authors": [
+        {
+            "name": "CBWS",
+            "email": "cbws@cbws.xyz"
+        }
+    ],
+    "require": {
+        "cbws/php-cbws-grpc": "^0.0.8",
+        "ext-grpc": "^1.29",
+        "league/oauth2-client": "^2.4",
+        "symfony/yaml": "^5.1"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:cbws/php-cbws-grpc.git"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Cbws\\API\\": "src"
+        }
+    }
+}
