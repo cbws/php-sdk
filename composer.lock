@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "99d64cf7d667d59199aff3f88317e548",
+    "content-hash": "a9b00ee35a1e37c2e5a264fdff642f48",
     "packages": [
         {
             "name": "cbws/php-cbws-grpc",
-            "version": "v0.1.0",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:cbws/php-cbws-grpc.git",
-                "reference": "ab31e874caf21588f9b7b92942a2beaf6d6d264b"
+                "reference": "cf394ad3d2b0bf99f8031df4685bac3f4752070b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cbws/php-cbws-grpc/zipball/ab31e874caf21588f9b7b92942a2beaf6d6d264b",
-                "reference": "ab31e874caf21588f9b7b92942a2beaf6d6d264b",
+                "url": "https://api.github.com/repos/cbws/php-cbws-grpc/zipball/cf394ad3d2b0bf99f8031df4685bac3f4752070b",
+                "reference": "cf394ad3d2b0bf99f8031df4685bac3f4752070b",
                 "shasum": ""
             },
             "require": {
@@ -48,10 +48,10 @@
             ],
             "description": "Generated gRPC client libraries for CBWS",
             "support": {
-                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.1.0",
+                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.2.0",
                 "issues": "https://github.com/cbws/php-cbws-grpc/issues"
             },
-            "time": "2020-08-09T11:01:49+00:00"
+            "time": "2020-08-12T16:46:34+00:00"
         },
         {
             "name": "google/common-protos",
