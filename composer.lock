@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1e00e98219b059c444d82e45b57b5f13",
+    "content-hash": "da21ac7f048df7a44fe229e5bcabca40",
     "packages": [
         {
             "name": "cbws/php-cbws-grpc",
-            "version": "v0.3.4",
+            "version": "v0.4.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:cbws/php-cbws-grpc.git",
@@ -48,7 +48,7 @@
             ],
             "description": "Generated gRPC client libraries for CBWS",
             "support": {
-                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.3.4",
+                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.4.2",
                 "issues": "https://github.com/cbws/php-cbws-grpc/issues"
             },
             "time": "2020-09-07T12:19:17+00:00"
