@@ -1,6 +1,8 @@
 {
     "name": "cbws/php-cbws",
     "type": "library",
+    "license": "Apache-2.0",
+    "description": "Client libraries for the CBWS platform",
     "authors": [
         {
             "name": "CBWS",
