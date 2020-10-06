@@ -42,7 +42,7 @@ class Cloudbear extends AbstractProvider
     protected function checkResponse(ResponseInterface $response, $data)
     {
         if ($response->getStatusCode() !== 200) {
-            throw new IdentityProviderException($data['error'] . ': ' . $data['message'], $data['code'], $response);
+            throw new IdentityProviderException($data['error'] . ': ' . $data['error_description'], $data['status_code'], $response);
         }
     }
 
