@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d3299670617839f63e6c421d7febc97",
+    "content-hash": "dfe9f2e909efdda9d54b35c39577147d",
     "packages": [
         {
             "name": "cbws/php-cbws-grpc",
-            "version": "v0.3.4",
+            "version": "v0.4.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:cbws/php-cbws-grpc.git",
