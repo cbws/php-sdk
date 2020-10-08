@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "cbws/php-cbws-grpc",
-            "version": "v0.4.3",
+            "version": "v0.4.3.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:cbws/php-cbws-grpc.git",
-                "reference": "9fdb15277ee2291ef7df27ea4b65ee2d9360cbab"
+                "reference": "12a49464ec4111d60736e04c7710959dbe7c187e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cbws/php-cbws-grpc/zipball/9fdb15277ee2291ef7df27ea4b65ee2d9360cbab",
-                "reference": "9fdb15277ee2291ef7df27ea4b65ee2d9360cbab",
+                "url": "https://api.github.com/repos/cbws/php-cbws-grpc/zipball/12a49464ec4111d60736e04c7710959dbe7c187e",
+                "reference": "12a49464ec4111d60736e04c7710959dbe7c187e",
                 "shasum": ""
             },
             "require": {
@@ -37,6 +37,7 @@
                     "Cbws\\IAM\\Options\\GRPC": "src/",
                     "Cbws\\IAM\\Policy\\GRPC": "src/",
                     "Cbws\\Projects\\GRPC": "src/",
+                    "Cbws\\VirtualMachines\\Grpc": "src/",
                     "Cbws\\VPN\\GRPC": "src/"
                 }
             },
@@ -48,10 +49,10 @@
             ],
             "description": "Generated gRPC client libraries for CBWS",
             "support": {
-                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.4.3",
+                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.4.3.1",
                 "issues": "https://github.com/cbws/php-cbws-grpc/issues"
             },
-            "time": "2020-09-07T12:19:17+00:00"
+            "time": "2020-10-06T23:34:48+00:00"
         },
         {
             "name": "google/common-protos",
