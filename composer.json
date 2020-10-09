@@ -26,5 +26,16 @@
         "psr-4": {
             "Cbws\\API\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cbws\\API\\Tests\\": "tests"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
+    "scripts": {
+        "test": "phpunit --testsuite Unit"
     }
 }
