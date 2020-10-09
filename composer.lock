@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfe9f2e909efdda9d54b35c39577147d",
+    "content-hash": "085766b37416a34a96a657e134885d38",
     "packages": [
         {
             "name": "cbws/php-cbws-grpc",
-            "version": "v0.4.3.1",
+            "version": "v0.5.2.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:cbws/php-cbws-grpc.git",
-                "reference": "12a49464ec4111d60736e04c7710959dbe7c187e"
+                "reference": "51988aeab60a93318f8dc766955896c2fb57ab5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cbws/php-cbws-grpc/zipball/12a49464ec4111d60736e04c7710959dbe7c187e",
-                "reference": "12a49464ec4111d60736e04c7710959dbe7c187e",
+                "url": "https://api.github.com/repos/cbws/php-cbws-grpc/zipball/51988aeab60a93318f8dc766955896c2fb57ab5d",
+                "reference": "51988aeab60a93318f8dc766955896c2fb57ab5d",
                 "shasum": ""
             },
             "require": {
@@ -38,7 +38,8 @@
                     "Cbws\\IAM\\Policy\\GRPC": "src/",
                     "Cbws\\Projects\\GRPC": "src/",
                     "Cbws\\VirtualMachines\\Grpc": "src/",
-                    "Cbws\\VPN\\GRPC": "src/"
+                    "Cbws\\VPN\\GRPC": "src/",
+                    "Google\\LongRunning\\OperationsClient": "src/"
                 }
             },
             "authors": [
@@ -49,10 +50,10 @@
             ],
             "description": "Generated gRPC client libraries for CBWS",
             "support": {
-                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.4.3.1",
+                "source": "https://github.com/cbws/php-cbws-grpc/tree/v0.5.2.2",
                 "issues": "https://github.com/cbws/php-cbws-grpc/issues"
             },
-            "time": "2020-10-06T23:34:48+00:00"
+            "time": "2020-10-09T09:08:49+00:00"
         },
         {
             "name": "google/common-protos",
@@ -95,16 +96,16 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v3.13.0",
+            "version": "v3.13.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "fddc6c2439b190284f207143f6d37bf5b651cea6"
+                "reference": "b760544e2ad1225415643ebe1b234c2797c3dad9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/fddc6c2439b190284f207143f6d37bf5b651cea6",
-                "reference": "fddc6c2439b190284f207143f6d37bf5b651cea6",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/b760544e2ad1225415643ebe1b234c2797c3dad9",
+                "reference": "b760544e2ad1225415643ebe1b234c2797c3dad9",
                 "shasum": ""
             },
             "require": {
@@ -132,7 +133,7 @@
             "keywords": [
                 "proto"
             ],
-            "time": "2020-08-15T00:44:58+00:00"
+            "time": "2020-10-08T18:25:27+00:00"
         },
         {
             "name": "grpc/grpc",
