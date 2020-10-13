@@ -49,7 +49,7 @@ class Credentials
             return new Credentials(new RememberAccessToken(new CLI\TokenSource($cliFile, $scopes)));
         }
 
-        throw new Exception('no credentials found');
+        return null;
     }
 
     public static function fromCredentialsFile(string $filename, array $scopes): Credentials

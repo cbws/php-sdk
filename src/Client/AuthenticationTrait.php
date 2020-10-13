@@ -32,8 +32,13 @@ trait AuthenticationTrait
         return $this->tokenCallCredentials->getCallCredentials();
     }
 
-    protected function getDefaultTokenSource(): TokenSource
+    protected function getDefaultTokenSource(): ?TokenSource
     {
-        return Credentials::FindDefault([])->getTokenSource();
+        $credentials = Credentials::FindDefault([]);
+        if (is_null($credentials)) {
+            return null;
+        }
+
+        return $credentials->getTokenSource();
     }
 }
