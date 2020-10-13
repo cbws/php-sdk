@@ -25,7 +25,8 @@
     "autoload": {
         "psr-4": {
             "Cbws\\API\\": "src"
-        }
+        },
+        "files": ["src/OAuth2/Functional/RandomStr.php"]
     },
     "autoload-dev": {
         "psr-4": {
