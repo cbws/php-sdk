@@ -21,7 +21,7 @@ class JWTClientCredentials extends ClientCredentials
         $token = (new Builder())
             ->permittedFor('https://accounts.cloudbear.nl/oauth2/token') // Configures the audience (aud claim)
             ->issuedBy($clientID) // Configures the issuer (iss claim)
-            ->identifiedBy(random_str(16), true) // Configures the id (jti claim), replicating as a header item
+            ->identifiedBy(\Cbws\API\OAuth2\Functional\random_str(16), true) // Configures the id (jti claim), replicating as a header item
             ->relatedTo($clientID)
             ->withHeader('kid', $privateKeyID)
             ->issuedAt(time()) // Configures the time that the token was issue (iat claim)
