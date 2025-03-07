@@ -2,7 +2,7 @@
 
 namespace Cbws\API\OAuth2\CLI;
 
-use Cbws\API\OAuth2\Cloudbear\Cloudbear;
+use Cbws\API\OAuth2\Cloudbear\Cbws;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -26,7 +26,7 @@ class TokenSource implements \Cbws\API\OAuth2\TokenSource
         $this->config = Yaml::parseFile($filename);
         $this->scopes = $scopes;
 
-        $this->provider = new Cloudbear([]);
+        $this->provider = new Cbws([]);
     }
 
     public function token(): AccessTokenInterface

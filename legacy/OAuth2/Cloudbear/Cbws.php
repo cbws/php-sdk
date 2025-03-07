@@ -8,11 +8,11 @@ use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 
-class Cloudbear extends AbstractProvider
+class Cbws extends AbstractProvider
 {
     use BearerAuthorizationTrait;
 
-    protected $accountsHostname = 'accounts.cloudbear.nl';
+    protected $accountsHostname = 'accounts.cbws.cloud';
 
     public function getAccountsHostname()
     {
