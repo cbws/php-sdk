@@ -2,7 +2,7 @@
 
 namespace Cbws\API\OAuth2\ServiceAccount;
 
-use Cbws\API\OAuth2\Cloudbear\Cloudbear;
+use Cbws\API\OAuth2\Cloudbear\Cbws;
 use Cbws\API\OAuth2\Cloudbear\JWTClientCredentials;
 use Cbws\API\OAuth2\TokenSource as BaseTokenSource;
 use Lcobucci\JWT\Signer\Key;
@@ -39,7 +39,7 @@ class TokenSource implements BaseTokenSource
         $this->privateKeyID = $privateKeyID;
         $this->scopes = $scopes;
 
-        $this->provider = new Cloudbear();
+        $this->provider = new Cbws();
         $this->provider->getGrantFactory()->setGrant('jwt_client_credentials', new JWTClientCredentials());
     }
 
@@ -47,7 +47,7 @@ class TokenSource implements BaseTokenSource
     {
         return $this->provider->getAccessToken('jwt_client_credentials', [
             'client_assertion' => JWTClientCredentials::generateAssertion(
-                $this->clientID, new Key($this->privateKey), $this->privateKeyID
+                $this->clientID, Key\InMemory::plainText($this->privateKey), $this->privateKeyID
             ),
             'scope' => implode(',', $this->scopes),
         ]);

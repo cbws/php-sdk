@@ -3,6 +3,7 @@
 namespace Cbws\API\OAuth2\Cloudbear;
 
 use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use League\OAuth2\Client\Grant\ClientCredentials;
@@ -18,8 +19,9 @@ class JWTClientCredentials extends ClientCredentials
 
     public static function generateAssertion(string $clientID, Key $key, string $privateKeyID)
     {
-        $token = (new Builder())
-            ->permittedFor('https://accounts.cloudbear.nl/oauth2/token') // Configures the audience (aud claim)
+        $configuration = Configuration::forAsymmetricSigner(new Sha256(), $key, $key);
+        $token = $configuration->builder()
+            ->permittedFor('https://accounts.cbws.cloud/oauth2/token') // Configures the audience (aud claim)
             ->issuedBy($clientID) // Configures the issuer (iss claim)
             ->identifiedBy(\Cbws\API\OAuth2\Functional\random_str(16), true) // Configures the id (jti claim), replicating as a header item
             ->relatedTo($clientID)
