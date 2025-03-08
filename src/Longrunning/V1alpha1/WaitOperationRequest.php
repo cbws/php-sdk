@@ -33,9 +33,9 @@ class WaitOperationRequest
         return $this->object->getName();
     }
 
-    public function withTimeout(int $timeoutMilliseconds)
+    public function withTimeout(int $timeoutMilliseconds): self
     {
-        $seconds = floor($timeoutMilliseconds / 1000);
+        $seconds = (int)floor($timeoutMilliseconds / 1000);
         $nanos = ($timeoutMilliseconds % 1000) * 1000000;
 
         $duration = new Duration();
@@ -59,7 +59,7 @@ class WaitOperationRequest
         ];
     }
 
-    public static function create()
+    public static function create(): self
     {
         return new self();
     }

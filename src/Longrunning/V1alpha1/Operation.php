@@ -11,10 +11,7 @@ use Cbws\Sdk\Exception\StatusException;
 
 class Operation
 {
-    /**
-     * @var \Cbws\Grpc\Longrunning\Operation
-     */
-    protected $object;
+    protected \Cbws\Grpc\Longrunning\Operation $object;
 
     public function __construct(\Cbws\Grpc\Longrunning\Operation $object)
     {
@@ -26,7 +23,7 @@ class Operation
         return $this->object->getName();
     }
 
-    public function getMetadata()
+    public function getMetadata(): ?object
     {
         if (is_null($this->object->getMetadata())) {
             return null;
@@ -54,7 +51,7 @@ class Operation
         return StatusException::fromStatusMessage($this->object->getError());
     }
 
-    public function getResponse()
+    public function getResponse(): ?object
     {
         if (is_null($this->object->getResponse())) {
             return null;

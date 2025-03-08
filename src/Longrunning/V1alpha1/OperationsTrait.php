@@ -45,14 +45,14 @@ trait OperationsTrait
         return new Operation($data);
     }
 
-    public function deleteOperation(string $name, DeleteOperationRequest $request = null)
+    public function deleteOperation(string $name, DeleteOperationRequest $request = null): void
     {
         if (is_null($request)) {
             $request = new DeleteOperationRequest();
         }
 
         $request = $request->withName($name);
-        $call = $this->getOperationsClient()->Deleteperation($request->toGrpc());
+        $call = $this->getOperationsClient()->DeleteOperation($request->toGrpc());
         /** @var GPBEmpty $data */
         list($data, $status) = $call->wait();
         if ($status->code !== 0) {
@@ -60,7 +60,7 @@ trait OperationsTrait
         }
     }
 
-    public function cancelOperation(string $name, CancelOperationRequest $request = null)
+    public function cancelOperation(string $name, CancelOperationRequest $request = null): void
     {
         if (is_null($request)) {
             $request = new CancelOperationRequest();

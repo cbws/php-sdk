@@ -43,7 +43,7 @@ class GetOperationRequest
         ];
     }
 
-    public static function create()
+    public static function create(): self
     {
         return new self();
     }
