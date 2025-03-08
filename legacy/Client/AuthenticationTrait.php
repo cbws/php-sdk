@@ -27,6 +27,11 @@ trait AuthenticationTrait
 
     protected function getCallCredentials(): CallCredentials
     {
+        // Either user hasn't provided default token source or we couldn't determine a default automatically
+        if (is_null($this->tokenSource)) {
+            throw new \Exception('No token source provided');
+        }
+
         $this->tokenCallCredentials = new TokenSourceCallCredentials($this->tokenSource);
 
         return $this->tokenCallCredentials->getCallCredentials();

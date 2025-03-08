@@ -48,7 +48,6 @@
               php.packages.phpstan
               php.packages.psalm
               pkgs.phpunit
-              self'.packages.satis
             ];
           };
 

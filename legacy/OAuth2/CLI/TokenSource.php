@@ -19,6 +19,10 @@ class TokenSource implements \Cbws\API\OAuth2\TokenSource
      * @var []string
      */
     protected $scopes;
+    /**
+     * @var Cbws
+     */
+    protected $provider;
 
     public function __construct(string $filename, array $scopes)
     {

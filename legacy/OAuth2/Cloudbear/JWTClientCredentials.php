@@ -2,7 +2,6 @@
 
 namespace Cbws\API\OAuth2\Cloudbear;
 
-use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;

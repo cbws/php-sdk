@@ -1,18 +1,15 @@
 <?php
 
-namespace Cbws\API\Longrunning\V1alpha1;
+namespace Cbws\Sdk\Longrunning\V1alpha1;
 
 class GetOperationRequest
 {
-    /**
-     * @var \Google\LongRunning\GetOperationRequest
-     */
-    protected $object;
+    protected \Cbws\Grpc\Longrunning\GetOperationRequest $object;
 
-    public function __construct(\Google\LongRunning\GetOperationRequest $object = null)
+    public function __construct(\Cbws\Grpc\Longrunning\GetOperationRequest $object = null)
     {
         if (is_null($object)) {
-            $object = new \Google\LongRunning\GetOperationRequest();
+            $object = new \Cbws\Grpc\Longrunning\GetOperationRequest();
         }
 
         $this->object = $object;
@@ -34,7 +31,7 @@ class GetOperationRequest
         return $this->object->getName();
     }
 
-    public function toGrpc(): \Google\LongRunning\GetOperationRequest
+    public function toGrpc(): \Cbws\Grpc\Longrunning\GetOperationRequest
     {
         return $this->object;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Cbws\API\Exception;
+namespace Cbws\Sdk\Exception;
 
 use Exception;
 use Google\Rpc\Code;

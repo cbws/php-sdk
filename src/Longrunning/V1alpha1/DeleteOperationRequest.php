@@ -1,18 +1,18 @@
 <?php
 
-namespace Cbws\API\Longrunning\V1alpha1;
+namespace Cbws\Sdk\Longrunning\V1alpha1;
 
-class CancelOperationRequest
+class DeleteOperationRequest
 {
     /**
-     * @var \Google\LongRunning\CancelOperationRequest
+     * @var \Cbws\Grpc\Longrunning\DeleteOperationRequest
      */
     protected $object;
 
-    public function __construct(\Google\LongRunning\CancelOperationRequest $object = null)
+    public function __construct(\Cbws\Grpc\Longrunning\DeleteOperationRequest $object = null)
     {
         if (is_null($object)) {
-            $object = new \Google\LongRunning\CancelOperationRequest();
+            $object = new \Cbws\Grpc\Longrunning\DeleteOperationRequest();
         }
 
         $this->object = $object;
@@ -34,7 +34,7 @@ class CancelOperationRequest
         return $this->object->getName();
     }
 
-    public function toGrpc(): \Google\LongRunning\CancelOperationRequest
+    public function toGrpc(): \Cbws\Grpc\Longrunning\DeleteOperationRequest
     {
         return $this->object;
     }

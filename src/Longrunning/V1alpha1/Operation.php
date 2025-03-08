@@ -1,20 +1,22 @@
 <?php
 
-namespace Cbws\API\Longrunning\V1alpha1;
+namespace Cbws\Sdk\Longrunning\V1alpha1;
 
-use Cbws\API\Exception\StatusException;
 use Cbws\API\VirtualMachines\V1alpha1\CreateInstanceMetadata;
 use Cbws\API\VirtualMachines\V1alpha1\DeleteInstanceMetadata;
 use Cbws\API\VirtualMachines\V1alpha1\Instance;
+use Cbws\Sdk\Compute\V1alpha1\CreateMachineMetadata;
+use Cbws\Sdk\Compute\V1alpha1\CreateMachineResponse;
+use Cbws\Sdk\Exception\StatusException;
 
 class Operation
 {
     /**
-     * @var \Google\LongRunning\Operation
+     * @var \Cbws\Grpc\Longrunning\Operation
      */
     protected $object;
 
-    public function __construct(\Google\LongRunning\Operation $object)
+    public function __construct(\Cbws\Grpc\Longrunning\Operation $object)
     {
         $this->object = $object;
     }
@@ -31,14 +33,8 @@ class Operation
         }
 
         switch ($this->object->getMetadata()->getTypeUrl()) {
-            case 'type.googleapis.com/cbws.virtual_machines.v1alpha1.CreateInstanceMetadata':
-                \Cbws\VirtualMachines\Grpc\V1alpha1\Metadata\Vm::initOnce();
-
-                return new CreateInstanceMetadata($this->object->getMetadata()->unpack());
-            case 'type.googleapis.com/cbws.virtual_machines.v1alpha1.DeleteInstanceMetadata':
-                \Cbws\VirtualMachines\Grpc\V1alpha1\Metadata\Vm::initOnce();
-
-                return new DeleteInstanceMetadata($this->object->getMetadata()->unpack());
+            case 'type.googleapis.com/cbws.compute.v1alpha1.CreateMachineMetadata':
+                return new CreateMachineMetadata($this->object->getMetadata()->unpack());
         }
 
         throw new \Exception('Unknown metadata: ' . $this->object->getMetadata()->getTypeUrl());
@@ -65,10 +61,8 @@ class Operation
         }
 
         switch ($this->object->getResponse()->getTypeUrl()) {
-            case 'type.googleapis.com/cbws.virtual_machines.v1alpha1.Instance':
-                \Cbws\VirtualMachines\Grpc\V1alpha1\Metadata\Instance::initOnce();
-
-                return new Instance($this->object->getResponse()->unpack());
+            case 'type.googleapis.com/cbws.compute.v1alpha1.CreateMachineResponse':
+                return new CreateMachineResponse($this->object->getResponse()->unpack());
             case 'type.googleapis.com/google.protobuf.Empty':
                 return null;
         }

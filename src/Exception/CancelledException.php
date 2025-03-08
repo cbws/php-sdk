@@ -1,6 +1,6 @@
 <?php
 
-namespace Cbws\API\Exception;
+namespace Cbws\Sdk\Exception;
 
 class CancelledException extends StatusException
 {

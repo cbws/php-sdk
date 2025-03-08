@@ -44,9 +44,9 @@ class Credentials
         }
 
         // Third, try the CBWS CLI config
-        $cliFile = CLI\TokenSource::getConfigFile();
+        $cliFile = \Cbws\API\OAuth2\CLI\TokenSource::getConfigFile();
         if (file_exists($cliFile)) {
-            return new Credentials(new RememberAccessToken(new CLI\TokenSource($cliFile, $scopes)));
+            return new Credentials(new RememberAccessToken(new \Cbws\API\OAuth2\CLI\TokenSource($cliFile, $scopes)));
         }
 
         return null;
@@ -64,7 +64,7 @@ class Credentials
             throw new Exception('Unknown credential type ' . $data->type);
         }
 
-        return new Credentials(new ServiceAccount\TokenSource($data->client_id, $data->private_key, $data->private_key_id, $scopes));
+        return new Credentials(new \Cbws\API\OAuth2\ServiceAccount\TokenSource($data->client_id, $data->private_key, $data->private_key_id, $scopes));
     }
 
     public static function wellKnownFile()

@@ -15,7 +15,8 @@
         "league/oauth2-client": "^2.8",
         "symfony/yaml": "^7.2",
         "lcobucci/jwt": "^5.5",
-        "google/common-protos": "^4.11"
+        "google/common-protos": "^4.11",
+        "ramsey/uuid": "5.x-dev"
     },
     "minimum-stability": "dev",
     "require-dev": {
