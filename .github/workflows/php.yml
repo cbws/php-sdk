@@ -58,7 +58,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        uses: php-actions/composer@v2
+        uses: php-actions/composer@v6
         with:
           ssh_key: ${{ secrets.ssh_key }}
           ssh_key_pub: ${{ secrets.ssh_key_pub }}
