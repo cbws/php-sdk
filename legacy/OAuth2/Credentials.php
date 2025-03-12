@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cbws\API\OAuth2;
 
 use Exception;
+use JsonException;
+
+use const DIRECTORY_SEPARATOR;
 
 class Credentials
 {
-    /**
-     * @var TokenSource
-     */
-    protected $tokenSource;
-    /**
-     * @var string
-     */
-    protected $json;
+    protected TokenSource $tokenSource;
+
+    protected string $json;
 
     public function __construct(TokenSource $tokenSource)
     {
@@ -30,45 +30,52 @@ class Credentials
         return $this->json;
     }
 
-    public static function FindDefault(array $scopes): ?Credentials
+    public static function findDefault(array $scopes): ?self
     {
         // First, try the environment variable.
-        if (!empty(getenv("CLOUDBEAR_CREDENTIALS"))) {
-            return self::fromCredentialsFile(getenv("CLOUDBEAR_CREDENTIALS"), $scopes);
+        if (!empty(getenv('CBWS_CREDENTIALS'))) {
+            return self::fromCredentialsFile(getenv('CBWS_CREDENTIALS'), $scopes);
         }
 
         // Second, try a well-known file.
         $filename = self::wellKnownFile();
+
         if (file_exists($filename)) {
             return self::fromCredentialsFile($filename, $scopes);
         }
 
         // Third, try the CBWS CLI config
         $cliFile = \Cbws\API\OAuth2\CLI\TokenSource::getConfigFile();
+
         if (file_exists($cliFile)) {
-            return new Credentials(new RememberAccessToken(new \Cbws\API\OAuth2\CLI\TokenSource($cliFile, $scopes)));
+            return new self(new RememberAccessToken(new \Cbws\API\OAuth2\CLI\TokenSource($cliFile, $scopes)));
         }
 
         return null;
     }
 
-    public static function fromCredentialsFile(string $filename, array $scopes): Credentials
+    public static function fromCredentialsFile(string $filename, array $scopes): self
     {
         return self::fromJSON(file_get_contents($filename), $scopes);
     }
 
-    public static function fromJSON(string $json, array $scopes): Credentials
+    /**
+     * @throws JsonException
+     * @throws Exception
+     */
+    public static function fromJSON(string $json, array $scopes): self
     {
-        $data = json_decode($json);
+        $data = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
+
         if ($data->type !== 'service_account') {
-            throw new Exception('Unknown credential type ' . $data->type);
+            throw new Exception('Unknown credential type '.$data->type);
         }
 
-        return new Credentials(new \Cbws\API\OAuth2\ServiceAccount\TokenSource($data->client_id, $data->private_key, $data->private_key_id, $scopes));
+        return new self(new \Cbws\API\OAuth2\ServiceAccount\TokenSource($data->client_id, $data->private_key, $data->private_key_id, $scopes));
     }
 
-    public static function wellKnownFile()
+    public static function wellKnownFile(): string
     {
-        return $_SERVER['HOME'] . DIRECTORY_SEPARATOR . '.config' . DIRECTORY_SEPARATOR . 'cbws' . DIRECTORY_SEPARATOR . 'cbws.json';
+        return $_SERVER['HOME'].DIRECTORY_SEPARATOR.'.config'.DIRECTORY_SEPARATOR.'cbws'.DIRECTORY_SEPARATOR.'cbws.json';
     }
 }

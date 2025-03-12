@@ -1,22 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cbws\API\Client;
 
 use Cbws\API\OAuth2\Credentials;
 use Cbws\API\OAuth2\TokenSource;
+use Exception;
 use Grpc\CallCredentials;
 
 trait AuthenticationTrait
 {
-    /**
-     * @var TokenSource
-     */
-    protected $tokenSource;
+    protected ?TokenSource $tokenSource = null;
 
-    /**
-     * @var TokenSourceCallCredentials
-     */
-    protected $tokenCallCredentials;
+    protected TokenSourceCallCredentials $tokenCallCredentials;
 
     public function withTokenSource(TokenSource $tokenSource): self
     {
@@ -28,8 +25,8 @@ trait AuthenticationTrait
     protected function getCallCredentials(): CallCredentials
     {
         // Either user hasn't provided default token source or we couldn't determine a default automatically
-        if (is_null($this->tokenSource)) {
-            throw new \Exception('No token source provided');
+        if ($this->tokenSource === null) {
+            throw new Exception('No token source provided'); // TODO create exception class
         }
 
         $this->tokenCallCredentials = new TokenSourceCallCredentials($this->tokenSource);
@@ -39,11 +36,6 @@ trait AuthenticationTrait
 
     protected function getDefaultTokenSource(): ?TokenSource
     {
-        $credentials = Credentials::FindDefault([]);
-        if (is_null($credentials)) {
-            return null;
-        }
-
-        return $credentials->getTokenSource();
+        return Credentials::findDefault([])?->getTokenSource();
     }
 }

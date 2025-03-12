@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cbws\API\OAuth2\Cloudbear;
 
 use Lcobucci\JWT\Configuration;
@@ -29,6 +31,6 @@ class JWTClientCredentials extends ClientCredentials
             ->expiresAt(time() + 3600) // Configures the expiration time of the token (exp claim)
             ->getToken(new Sha256(), $key); // Retrieves the generated token
 
-        return (string)$token;
+        return (string) $token;
     }
 }

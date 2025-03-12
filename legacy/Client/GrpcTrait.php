@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cbws\API\Client;
 
 use Grpc\CallCredentials;
@@ -9,10 +11,9 @@ trait GrpcTrait
 {
     protected function getChannelCredentials(CallCredentials $callCredentials): ChannelCredentials
     {
-        $ssl = ChannelCredentials::createSsl();
         return ChannelCredentials::createComposite(
-            $ssl,
-            $callCredentials
+            ChannelCredentials::createSsl(),
+            $callCredentials,
         );
     }
 }

@@ -1,5 +1,9 @@
 # PHP libraries for CBWS
 
+## TODOS
+
+ - check versions of libraries to support lower versions if possible
+
 ![release][release]
 ![downloads][downloads]
 
@@ -22,7 +26,7 @@ composer require cbws/php-cbws
 
 ```php
 // Create client for project `some-project`
-$compute = new \Cbws\Sdk\Compute\V1alpha1\Client('some-project');
+$compute = new \Cbws\Sdk\Compute\Client('some-project');
 ```
 
 #### Listing machines
