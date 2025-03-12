@@ -1,20 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cbws\API\OAuth2;
 
 use League\OAuth2\Client\Token\AccessTokenInterface;
 
 class RememberAccessToken implements TokenSource
 {
-    /**
-     * @var TokenSource
-     */
-    protected $tokenSource;
+    protected TokenSource $tokenSource;
 
-    /**
-     * @var AccessTokenInterface
-     */
-    protected $token;
+    protected ?AccessTokenInterface $token;
 
     public function __construct(TokenSource $tokenSource)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cbws\API\Tests\Unit\Client;
 
 use Cbws\API\Client\TokenSourceCallCredentials;
@@ -11,33 +13,30 @@ use PHPUnit\Framework\TestCase;
 
 class TokenSourceCallCredentialsTest extends TestCase
 {
-    public function testGetCallCredentials()
+    public function test_get_call_credentials(): void
     {
         $tokenSourceCallCredentials = new TokenSourceCallCredentials(new TestTokenSource(new AccessToken([
             'access_token' => 'Test',
         ])));
         $callCredentials = $tokenSourceCallCredentials->getCallCredentials();
-        $this->assertInstanceOf(CallCredentials::class, $callCredentials);
+        self::assertInstanceOf(CallCredentials::class, $callCredentials);
     }
 
-    public function testCredentialsPlugin()
+    public function test_credentials_plugin(): void
     {
         $tokenSourceCallCredentials = new TokenSourceCallCredentials(new TestTokenSource(new AccessToken([
             'access_token' => 'Test',
         ])));
         $headers = $tokenSourceCallCredentials->credentialsPlugin();
-        $this->assertIsArray($headers);
-        $this->assertArrayHasKey('authorization', $headers);
-        $this->assertEquals(['Bearer Test'], $headers['authorization']);
+        self::assertIsArray($headers);
+        self::assertArrayHasKey('authorization', $headers);
+        self::assertEquals(['Bearer Test'], $headers['authorization']);
     }
 }
 
 class TestTokenSource implements TokenSource
 {
-    /**
-     * @var AccessTokenInterface
-     */
-    protected $token;
+    protected AccessTokenInterface $token;
 
     public function __construct(AccessTokenInterface $token)
     {

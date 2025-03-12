@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cbws\API\Client;
 
 use Cbws\API\OAuth2\TokenSource;
+use Closure;
 use Grpc\CallCredentials;
 
 class TokenSourceCallCredentials
 {
-    /**
-     * @var TokenSource
-     */
-    public $tokenSource;
+    public TokenSource $tokenSource;
 
     public function __construct(TokenSource $tokenSource)
     {
@@ -22,15 +22,18 @@ class TokenSourceCallCredentials
         return $this->tokenSource->token()->getToken();
     }
 
-    public function getClosure(): callable
+    public function getClosure(): Closure
     {
-        return [$this, 'credentialsPlugin'];
+        return $this->credentialsPlugin(...);
     }
 
-    public function credentialsPlugin()
+    /**
+     * @return array<string, string[]>
+     */
+    public function credentialsPlugin(): array
     {
         return [
-            'authorization' => ['Bearer ' . $this->getToken()],
+            'authorization' => ['Bearer '.$this->getToken()],
         ];
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cbws\API\OAuth2\Cloudbear;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -21,15 +23,15 @@ class Cbws extends AbstractProvider
 
     public function getBaseAuthorizationUrl()
     {
-        return 'https://' . $this->getAccountsHostname() . '/oauth2/authorize';
+        return 'https://'.$this->getAccountsHostname().'/oauth2/authorize';
     }
 
     public function getBaseAccessTokenUrl(array $params)
     {
-        return 'https://' . $this->getAccountsHostname() . '/oauth2/token';
+        return 'https://'.$this->getAccountsHostname().'/oauth2/token';
     }
 
-    public function getResourceOwnerDetailsUrl(AccessToken $token)
+    public function getResourceOwnerDetailsUrl(AccessToken $token): void
     {
         // TODO: Implement getResourceOwnerDetailsUrl() method.
     }
@@ -39,14 +41,14 @@ class Cbws extends AbstractProvider
         return [];
     }
 
-    protected function checkResponse(ResponseInterface $response, $data)
+    protected function checkResponse(ResponseInterface $response, $data): void
     {
         if ($response->getStatusCode() !== 200) {
-            throw new IdentityProviderException($data['error'] . ': ' . $data['error_description'], $data['status_code'], $response);
+            throw new IdentityProviderException($data['error'].': '.$data['error_description'], $data['status_code'], $response);
         }
     }
 
-    protected function createResourceOwner(array $response, AccessToken $token)
+    protected function createResourceOwner(array $response, AccessToken $token): void
     {
         // TODO: Implement createResourceOwner() method.
     }

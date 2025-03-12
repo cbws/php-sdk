@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cbws\API\OAuth2\CLI;
 
 use Cbws\API\OAuth2\Cloudbear\Cbws;
@@ -7,22 +9,20 @@ use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Symfony\Component\Yaml\Yaml;
 
+use const DIRECTORY_SEPARATOR;
+
 class TokenSource implements \Cbws\API\OAuth2\TokenSource
 {
-    /**
-     * @var string
-     */
-    protected $filename;
+    protected string $filename;
 
-    protected $config;
+    protected mixed $config; // TODO
+
     /**
-     * @var []string
+     * @var string[]
      */
-    protected $scopes;
-    /**
-     * @var Cbws
-     */
-    protected $provider;
+    protected array $scopes;
+
+    protected Cbws $provider;
 
     public function __construct(string $filename, array $scopes)
     {
@@ -36,6 +36,7 @@ class TokenSource implements \Cbws\API\OAuth2\TokenSource
     public function token(): AccessTokenInterface
     {
         $token = $this->getConfigToken();
+
         if (!$token->hasExpired()) {
             return $token;
         }
@@ -54,6 +55,7 @@ class TokenSource implements \Cbws\API\OAuth2\TokenSource
     protected function getConfigToken(): AccessTokenInterface
     {
         $time = strtotime('2015-02-01');
+
         if (!$this->config['oauth_token']['expiry']) {
             $time = date_create_from_format(DATE_RFC3339_EXTENDED, $this->config['oauth_token']['expiry'])->getTimestamp();
         }
@@ -65,7 +67,7 @@ class TokenSource implements \Cbws\API\OAuth2\TokenSource
         ]);
     }
 
-    protected function setConfigToken(AccessTokenInterface $token)
+    protected function setConfigToken(AccessTokenInterface $token): void
     {
         $this->config['oauth_token']['accesstoken'] = $token->getToken();
         $this->config['oauth_token']['refreshtoken'] = $token->getRefreshToken();
@@ -78,6 +80,6 @@ class TokenSource implements \Cbws\API\OAuth2\TokenSource
             return getenv('CBWS_CONFIG_FILE');
         }
 
-        return $_SERVER['HOME'] . '/.cbws.yaml';
+        return $_SERVER['HOME'].DIRECTORY_SEPARATOR.'.cbws.yaml';
     }
 }
