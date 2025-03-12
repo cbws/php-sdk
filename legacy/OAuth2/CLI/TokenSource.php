@@ -50,7 +50,8 @@ class TokenSource implements \Cbws\API\OAuth2\TokenSource
     protected function getConfigToken(): AccessTokenInterface
     {
         $time = strtotime('2015-02-01');
-        if (!$this->config['oauth_token']['expiry']) {
+        // If the token expiry date is included in the config use it
+        if ($this->config['oauth_token']['expiry']) {
             $time = date_create_from_format(DATE_RFC3339_EXTENDED, $this->config['oauth_token']['expiry'])->getTimestamp();
         }
 
