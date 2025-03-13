@@ -6,7 +6,7 @@ namespace Cbws\Sdk\Compute\Requests;
 
 use Cbws\Grpc\Compute\V1alpha1\CreateMachineRequest as CreateMachineRequestGrpc;
 use Cbws\Sdk\Common\IdempotencyKeyTrait;
-use Cbws\Sdk\Compute\Machine;
+use Cbws\Sdk\Compute\Models\Machine;
 
 class CreateMachineRequest
 {
@@ -55,9 +55,9 @@ class CreateMachineRequest
     {
         return [
             'parent' => $this->getParent(),
-            //            'pageSize' => $this->getPageSize(),
-            //            'pageToken' => $this->getPageToken(),
-            //            'fields' => $this->getFields(),
+            // 'pageSize' => $this->getPageSize(),
+            // 'pageToken' => $this->getPageToken(),
+            // 'fields' => $this->getFields(),
         ];
     }
 }

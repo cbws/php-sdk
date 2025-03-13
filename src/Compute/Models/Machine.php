@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Cbws\Sdk\Compute;
+namespace Cbws\Sdk\Compute\Models;
 
 use Cbws\Grpc\Compute\V1alpha1\Machine as MachineGrpc;
 use Cbws\Sdk\Compute\Enums\MachineState;

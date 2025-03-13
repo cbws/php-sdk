@@ -11,6 +11,7 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Symfony\Component\Yaml\Yaml;
+
 use const DIRECTORY_SEPARATOR;
 
 class CLITokenSource implements TokenSourceContract

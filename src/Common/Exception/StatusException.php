@@ -7,7 +7,6 @@ namespace Cbws\Sdk\Common\Exception;
 use Exception;
 use Google\Rpc\Code;
 use Google\Rpc\Status;
-use stdClass;
 use Throwable;
 
 class StatusException extends Exception
@@ -30,8 +29,6 @@ class StatusException extends Exception
 
     /**
      * @param object{ code: int, details: string } $status
-     *
-     * @return self
      */
     public static function fromStatus(object $status): self
     {

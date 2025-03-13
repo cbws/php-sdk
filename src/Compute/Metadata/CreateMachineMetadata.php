@@ -6,7 +6,7 @@ namespace Cbws\Sdk\Compute\Metadata;
 
 use Cbws\Grpc\Compute\V1alpha1\CreateMachineMetadata as CreateMachineMetadataGrpc;
 use Cbws\Sdk\Compute\Enums\MachineState;
-use Cbws\Sdk\Compute\Machine;
+use Cbws\Sdk\Compute\Models\Machine;
 
 class CreateMachineMetadata
 {

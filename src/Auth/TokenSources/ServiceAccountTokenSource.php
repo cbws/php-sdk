@@ -15,6 +15,7 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use stdClass;
+
 use const DIRECTORY_SEPARATOR;
 
 class ServiceAccountTokenSource implements TokenSourceContract

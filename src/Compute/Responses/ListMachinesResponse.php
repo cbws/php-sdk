@@ -6,7 +6,7 @@ namespace Cbws\Sdk\Compute\Responses;
 
 use Cbws\Grpc\Compute\V1alpha1\ListMachinesResponse as ListMachinesResponseGrpc;
 use Cbws\Grpc\Compute\V1alpha1\Machine as MachineGrpc;
-use Cbws\Sdk\Compute\Machine;
+use Cbws\Sdk\Compute\Models\Machine;
 
 class ListMachinesResponse
 {
