@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Cbws\API\Client;
+namespace Cbws\Sdk\Auth\Client;
 
 use Grpc\CallCredentials;
 use Grpc\ChannelCredentials;

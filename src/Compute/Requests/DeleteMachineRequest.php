@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace Cbws\Sdk\Compute\Requests;
 
+use Cbws\Grpc\Compute\V1alpha1\DeleteMachineRequest as DeleteMachineRequestGrpc;
 use Cbws\Sdk\Common\IdempotencyKeyTrait;
 
 class DeleteMachineRequest
 {
     use IdempotencyKeyTrait;
 
-    protected \Cbws\Grpc\Compute\V1alpha1\DeleteMachineRequest $object;
+    protected DeleteMachineRequestGrpc $object;
 
-    public function __construct(?\Cbws\Grpc\Compute\V1alpha1\DeleteMachineRequest $object = null)
+    public function __construct(?DeleteMachineRequestGrpc $object = null)
     {
-        if ($object === null) {
-            $object = new \Cbws\Grpc\Compute\V1alpha1\DeleteMachineRequest();
-        }
-
+        $this->object = $object ?? new DeleteMachineRequestGrpc();
         $this->idempotencyKey = $this->generateIdempotencyKey();
-        $this->object = $object;
     }
 
     public function getName(): string
@@ -34,7 +31,7 @@ class DeleteMachineRequest
         return $this;
     }
 
-    public function toGrpc(): \Cbws\Grpc\Compute\V1alpha1\DeleteMachineRequest
+    public function toGrpc(): DeleteMachineRequestGrpc
     {
         return $this->object;
     }

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Cbws\API\OAuth2;
+namespace Cbws\Sdk\Auth\TokenSources;
 
 use League\OAuth2\Client\Token\AccessTokenInterface;
 
-class RememberAccessToken implements TokenSource
+class RememberAccessToken implements TokenSourceContract
 {
-    protected TokenSource $tokenSource;
+    protected TokenSourceContract $tokenSource;
 
     protected ?AccessTokenInterface $token = null;
 
-    public function __construct(TokenSource $tokenSource)
+    public function __construct(TokenSourceContract $tokenSource)
     {
         $this->tokenSource = $tokenSource;
     }
@@ -24,5 +24,10 @@ class RememberAccessToken implements TokenSource
         }
 
         return $this->token = $this->tokenSource->token();
+    }
+
+    public function getProject(): ?string
+    {
+        return $this->tokenSource->getProject();
     }
 }

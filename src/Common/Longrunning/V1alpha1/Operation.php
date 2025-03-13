@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Cbws\Sdk\Common\Longrunning\V1alpha1;
 
+use Cbws\Grpc\Compute\V1alpha1\CreateMachineMetadata as CreateMachineMetadataGrpc;
+use Cbws\Grpc\Compute\V1alpha1\CreateMachineResponse as CreateMachineResponseGrpc;
 use Cbws\Grpc\Longrunning\Operation as OperationGrpc;
 use Cbws\Sdk\Common\Exception\StatusException;
 use Cbws\Sdk\Compute\Metadata\CreateMachineMetadata;
@@ -24,18 +26,25 @@ class Operation
         return $this->object->getName();
     }
 
+    /**
+     * @throws Exception
+     */
     public function getMetadata(): ?object
     {
-        if ($this->object->getMetadata() === null) {
+        $metadata = $this->object->getMetadata();
+
+        if ($metadata === null) {
             return null;
         }
 
-        switch ($this->object->getMetadata()->getTypeUrl()) {
+        switch ($metadata->getTypeUrl()) {
             case 'type.googleapis.com/cbws.compute.v1alpha1.CreateMachineMetadata':
-                return new CreateMachineMetadata($this->object->getMetadata()->unpack());
+                assert($metadata->unpack() instanceof CreateMachineMetadataGrpc);
+
+                return new CreateMachineMetadata($metadata->unpack());
         }
 
-        throw new Exception('Unknown metadata: '.$this->object->getMetadata()->getTypeUrl());
+        throw new Exception('Unknown metadata: '.$metadata->getTypeUrl());
     }
 
     public function getDone(): bool
@@ -52,20 +61,27 @@ class Operation
         return StatusException::fromStatusMessage($this->object->getError());
     }
 
+    /**
+     * @throws Exception
+     */
     public function getResponse(): ?object
     {
-        if ($this->object->getResponse() === null) {
+        $response = $this->object->getResponse();
+
+        if ($response === null) {
             return null;
         }
 
-        switch ($this->object->getResponse()->getTypeUrl()) {
+        switch ($response->getTypeUrl()) {
             case 'type.googleapis.com/cbws.compute.v1alpha1.CreateMachineResponse':
-                return new CreateMachineResponse($this->object->getResponse()->unpack());
+                assert($response->unpack() instanceof CreateMachineResponseGrpc);
+
+                return new CreateMachineResponse($response->unpack());
             case 'type.googleapis.com/google.protobuf.Empty':
                 return null;
         }
 
-        throw new Exception('Unknown response: '.$this->object->getResponse()->getTypeUrl());
+        throw new Exception('Unknown response: '.$response->getTypeUrl());
     }
 
     public function __debugInfo()

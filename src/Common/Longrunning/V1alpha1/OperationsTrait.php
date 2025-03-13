@@ -14,7 +14,10 @@ trait OperationsTrait
 {
     protected ?OperationsClient $operationsClient = null;
 
-    public function getOperation(string $name, ?GetOperationRequest $request = null): Operation
+    /**
+     * @throws StatusException
+     */
+    protected function getOperation(string $name, ?GetOperationRequest $request = null): Operation
     {
         if ($request === null) {
             $request = new GetOperationRequest();
@@ -22,7 +25,9 @@ trait OperationsTrait
 
         $request = $request->withName($name);
         $call = $this->getOperationsClient()->GetOperation($request->toGrpc());
+
         /** @var GrpcOperation $data */
+        /** @var object{ code: int, details: string } $status */
         [$data, $status] = $call->wait();
 
         if ($status->code !== 0) {
@@ -35,13 +40,15 @@ trait OperationsTrait
     /**
      * @throws StatusException
      */
-    public function waitOperation(string $name, int $timeoutMilliseconds = 1000, ?WaitOperationRequest $request = null): Operation
+    protected function waitOperation(string $name, int $timeoutMilliseconds = 1000, ?WaitOperationRequest $request = null): Operation
     {
         $request ??= new WaitOperationRequest();
 
         $request = $request->withName($name)->withTimeout($timeoutMilliseconds);
         $call = $this->getOperationsClient()->WaitOperation($request->toGrpc());
+
         /** @var GrpcOperation $data */
+        /** @var object{ code: int, details: string } $status */
         [$data, $status] = $call->wait();
 
         if ($status->code !== 0) {
@@ -54,14 +61,16 @@ trait OperationsTrait
     /**
      * @throws StatusException
      */
-    public function deleteOperation(string $name, ?DeleteOperationRequest $request = null): void
+    protected function deleteOperation(string $name, ?DeleteOperationRequest $request = null): void
     {
         $request ??= new DeleteOperationRequest();
 
         $request = $request->withName($name);
         $call = $this->getOperationsClient()->DeleteOperation($request->toGrpc());
+
         /** @var GPBEmpty $data */
-        [/* $data */, $status] = $call->wait();
+        /** @var object{ code: int, details: string } $status */
+        [$data, $status] = $call->wait();
 
         if ($status->code !== 0) {
             throw StatusException::fromStatus($status);
@@ -71,7 +80,7 @@ trait OperationsTrait
     /**
      * @throws StatusException
      */
-    public function cancelOperation(string $name, ?CancelOperationRequest $request = null): void
+    protected function cancelOperation(string $name, ?CancelOperationRequest $request = null): void
     {
         if ($request === null) {
             $request = new CancelOperationRequest();
@@ -79,8 +88,10 @@ trait OperationsTrait
 
         $request = $request->withName($name);
         $call = $this->getOperationsClient()->CancelOperation($request->toGrpc());
+
         /** @var GPBEmpty $data */
-        [/* $data */, $status] = $call->wait();
+        /** @var object{ code: int, details: string } $status */
+        [$data, $status] = $call->wait();
 
         if ($status->code !== 0) {
             throw StatusException::fromStatus($status);
@@ -92,7 +103,7 @@ trait OperationsTrait
      *
      * @throws StatusException
      */
-    public function pollOperation(string $name): Generator
+    protected function pollOperation(string $name): Generator
     {
         $lastOperation = null;
 
@@ -110,7 +121,10 @@ trait OperationsTrait
         } while (!$operation->getDone());
     }
 
-    public function awaitOperation(string $name): Operation
+    /**
+     * @throws StatusException
+     */
+    protected function awaitOperation(string $name): Operation
     {
         do {
             $operation = $this->getOperation($name);

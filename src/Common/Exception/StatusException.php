@@ -17,7 +17,7 @@ class StatusException extends Exception
         $message = $status->getMessage();
 
         if (!in_array($status->getCode(), [Code::CANCELLED, Code::PERMISSION_DENIED], true)) {
-            $message = Code::name($status->getCode()).': '.$message;
+            $message = sprintf('%s: %s', Code::name($status->getCode()), $message);
         }
 
         parent::__construct($message, $status->getCode(), $previous);
@@ -28,7 +28,12 @@ class StatusException extends Exception
         return Code::name($this->getCode());
     }
 
-    public static function fromStatus(stdClass $status): self
+    /**
+     * @param object{ code: int, details: string } $status
+     *
+     * @return self
+     */
+    public static function fromStatus(object $status): self
     {
         return self::fromStatusMessage(new Status([
             'code' => $status->code,

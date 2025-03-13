@@ -15,8 +15,8 @@ class StopMachineRequest
 
     public function __construct(?StopMachineRequestGrpc $object = null)
     {
-        $this->idempotencyKey = $this->generateIdempotencyKey();
         $this->object = $object ?? new StopMachineRequestGrpc();
+        $this->idempotencyKey = $this->generateIdempotencyKey();
     }
 
     public function getName(): string

@@ -27,13 +27,7 @@ class CreateMachineRequest
 
     public function withParent(?string $parent = null): self
     {
-        if ($parent === null) {
-            $this->object->setParent('');
-
-            return $this;
-        }
-
-        $this->object->setParent($parent);
+        $this->object->setParent($parent ?? '');
 
         return $this;
     }

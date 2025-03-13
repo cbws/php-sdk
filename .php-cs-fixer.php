@@ -8,25 +8,11 @@ use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 class Linter
 {
     protected static array $notName = [
-        '_ide_helper_actions.php',
-        '_ide_helper_models.php',
-        '.phpstorm.meta.php',
         '.php-cs-fixer.php',
-        '_ide_helper.php',
-        '*.blade.php',
-        'server.php',
     ];
 
     protected static array $exclude = [
-        'bin',
-        'docs',
-        'logs',
-        'plugins',
-        'resources',
-        'templates',
-        'tmp',
         'vendor',
-        'webroot',
     ];
 
     public static function create(): ConfigInterface

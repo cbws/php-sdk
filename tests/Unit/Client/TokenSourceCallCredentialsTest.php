@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Cbws\API\Tests\Unit\Client;
 
-use Cbws\API\Client\TokenSourceCallCredentials;
-use Cbws\API\OAuth2\TokenSource;
+use Cbws\Sdk\Auth\Client\TokenSourceCallCredentials;
+use Cbws\Sdk\Auth\TokenSources\TokenSourceContract;
 use Grpc\CallCredentials;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
@@ -34,7 +34,7 @@ class TokenSourceCallCredentialsTest extends TestCase
     }
 }
 
-class TestTokenSource implements TokenSource
+class TestTokenSource implements TokenSourceContract
 {
     protected AccessTokenInterface $token;
 
@@ -46,5 +46,10 @@ class TestTokenSource implements TokenSource
     public function token(): AccessTokenInterface
     {
         return $this->token;
+    }
+
+    public function getProject(): ?string
+    {
+        return 'my-awesome-project';
     }
 }

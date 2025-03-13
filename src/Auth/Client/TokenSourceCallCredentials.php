@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Cbws\API\Client;
+namespace Cbws\Sdk\Auth\Client;
 
-use Cbws\API\OAuth2\TokenSource;
-use Closure;
+use Cbws\Sdk\Auth\TokenSources\TokenSourceContract;
 use Grpc\CallCredentials;
 
 class TokenSourceCallCredentials
 {
-    public TokenSource $tokenSource;
+    public TokenSourceContract $tokenSource;
 
-    public function __construct(TokenSource $tokenSource)
+    public function __construct(TokenSourceContract $tokenSource)
     {
         $this->tokenSource = $tokenSource;
     }
@@ -22,9 +21,9 @@ class TokenSourceCallCredentials
         return $this->tokenSource->token()->getToken();
     }
 
-    public function getClosure(): Closure
+    public function getClosure(): callable
     {
-        return $this->credentialsPlugin(...);
+        return [$this, 'credentialsPlugin'];
     }
 
     /**

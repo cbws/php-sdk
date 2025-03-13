@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace Cbws\Sdk\Compute\Requests;
 
+use Cbws\Grpc\Compute\V1alpha1\GetMachineRequest as GetMachineRequestGrpc;
 use Cbws\Sdk\Common\ReadMaskTrait;
 
 class GetMachineRequest
 {
     use ReadMaskTrait;
 
-    protected \Cbws\Grpc\Compute\V1alpha1\GetMachineRequest $object;
+    protected GetMachineRequestGrpc $object;
 
-    public function __construct(?\Cbws\Grpc\Compute\V1alpha1\GetMachineRequest $object = null)
+    public function __construct(?GetMachineRequestGrpc $object = null)
     {
-        if ($object === null) {
-            $object = new \Cbws\Grpc\Compute\V1alpha1\GetMachineRequest();
-        }
-
-        $this->object = $object;
+        $this->object = $object ?? new GetMachineRequestGrpc();
     }
 
     public function getName(): string
@@ -33,7 +30,7 @@ class GetMachineRequest
         return $this;
     }
 
-    public function toGrpc(): \Cbws\Grpc\Compute\V1alpha1\GetMachineRequest
+    public function toGrpc(): GetMachineRequestGrpc
     {
         return $this->object;
     }

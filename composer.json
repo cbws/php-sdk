@@ -33,12 +33,8 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Cbws\\API\\": "legacy",
             "Cbws\\Sdk\\": "src"
-        },
-        "files": [
-            "legacy/OAuth2/Functional/RandomStr.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

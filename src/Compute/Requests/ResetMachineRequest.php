@@ -15,8 +15,8 @@ class ResetMachineRequest
 
     public function __construct(?ResetMachineRequestGrpc $object = null)
     {
-        $this->idempotencyKey = $this->generateIdempotencyKey();
         $this->object = $object ?? new ResetMachineRequestGrpc();
+        $this->idempotencyKey = $this->generateIdempotencyKey();
     }
 
     public function getName(): string

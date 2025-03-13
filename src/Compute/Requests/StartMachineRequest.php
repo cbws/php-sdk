@@ -15,8 +15,8 @@ class StartMachineRequest
 
     public function __construct(?StartMachineRequestGrpc $object = null)
     {
-        $this->idempotencyKey = $this->generateIdempotencyKey();
         $this->object = $object ?? new StartMachineRequestGrpc();
+        $this->idempotencyKey = $this->generateIdempotencyKey();
     }
 
     public function getName(): string

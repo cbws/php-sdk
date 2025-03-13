@@ -2,7 +2,6 @@ parameters:
     level: 10
     paths:
         - src/
-        - legacy/
         - tests/
     checkDynamicProperties: true
     checkFunctionNameCase: true

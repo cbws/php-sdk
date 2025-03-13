@@ -15,11 +15,7 @@ class ListMachinesRequest
 
     public function __construct(?ListMachinesRequestGrpc $object = null)
     {
-        if ($object === null) {
-            $object = new ListMachinesRequestGrpc();
-        }
-
-        $this->object = $object;
+        $this->object = $object ?? new ListMachinesRequestGrpc();
 
         $this->withFields('machines.status', 'machines.type', 'machines.image');
     }
@@ -31,20 +27,14 @@ class ListMachinesRequest
 
     public function withParent(?string $parent = null): self
     {
-        if ($parent === null) {
-            $this->object->setParent('');
-
-            return $this;
-        }
-
-        $this->object->setParent($parent);
+        $this->object->setParent($parent ?? '');
 
         return $this;
     }
 
     public function withProject(?string $project = null): self
     {
-        return $this->withParent($project === null ? null : 'projects/'.$project);
+        return $this->withParent($project === null ? null : "projects/{$project}");
     }
 
     public function getPageSize(): ?int
