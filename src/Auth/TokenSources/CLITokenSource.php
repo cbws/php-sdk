@@ -69,7 +69,7 @@ class CLITokenSource implements TokenSourceContract
             'oauth_token' => [
                 'accesstoken' => $this->accessToken,
                 'expiresin' => $this->expiresIn,
-                'expiry' => $this->expiresIn,
+                'expiry' => $this->expiry->format(DATE_RFC3339_EXTENDED),
                 'refreshtoken' => $this->refreshToken,
                 'tokentype' => $this->tokenType,
             ],
