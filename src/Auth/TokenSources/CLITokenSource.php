@@ -56,7 +56,7 @@ class CLITokenSource implements TokenSourceContract
 
         $this->accessToken = $token['accesstoken'];
         $this->refreshToken = $token['refreshtoken'] ?? null;
-        $this->expiry = DateTimeImmutable::createFromFormat(DATE_RFC3339_EXTENDED, $token['expiresin']) ?: null;
+        $this->expiry = DateTimeImmutable::createFromFormat(DATE_RFC3339_EXTENDED, $token['expiry']) ?: null;
         $this->expiresIn = $token['expiresin'] ?? null;
         $this->tokenType = $token['tokentype'] ?? 'bearer';
         $this->projectName = $object['project_name'] ?? null;
