@@ -1,1 +1,6 @@
 /vendor/
+composer.lock
+.DS_Store
+Thumbs.db
+/.idea
+.php-cs-fixer.cache
