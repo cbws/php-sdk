@@ -110,8 +110,8 @@ class Operation
             'name' => $this->getName(),
             'metadata' => $this->getMetadata(),
             'done' => $this->getDone(),
-            'error' => $this->getError(),
-            'response' => $this->getResponse(),
+            'error' => $this->getError()?->getMessage(),
+            //            'response' => $this->getResponse(),
         ];
     }
 }

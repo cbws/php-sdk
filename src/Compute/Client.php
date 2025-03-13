@@ -7,6 +7,7 @@ namespace Cbws\Sdk\Compute;
 use Cbws\Grpc\Compute\V1alpha1\ComputeServiceClient;
 use Cbws\Sdk\Auth\Client\GrpcTrait;
 use Cbws\Sdk\Common\Client as BaseClient;
+use Cbws\Sdk\Common\Longrunning\Operations;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\OperationsTrait;
 
 class Client extends BaseClient
@@ -25,6 +26,11 @@ class Client extends BaseClient
     public function machines(): Machines
     {
         return new Machines($this);
+    }
+
+    public function operations(): Operations
+    {
+        return new Operations($this->getOperationsClient());
     }
 
     public function getClient(): ComputeServiceClient

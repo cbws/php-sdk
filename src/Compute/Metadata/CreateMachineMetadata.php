@@ -48,8 +48,8 @@ class CreateMachineMetadata implements MetadataInterface
     public function __debugInfo()
     {
         return [
-            'state' => $this->getState(),
-            'machine' => $this->getMachine(),
+            //            'state' => $this->getState(),
+            //            'machine' => $this->getMachine(),
         ];
     }
 }

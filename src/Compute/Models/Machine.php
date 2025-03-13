@@ -20,7 +20,7 @@ class Machine
 
     protected MachineGrpc $object;
 
-    protected Machines $client;
+    protected ?Machines $client = null;
 
     /**
      * @var array<string>
