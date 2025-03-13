@@ -24,12 +24,6 @@
         "phpstan/phpstan": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.71"
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "git@github.com:cbws/php-cbws-grpc.git"
-        }
-    ],
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
