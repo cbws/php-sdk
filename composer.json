@@ -10,36 +10,43 @@
         }
     ],
     "require": {
-        "cbws/php-cbws-grpc": "dev-main",
-        "ext-grpc": "^1.56",
-        "league/oauth2-client": "^2.8",
-        "symfony/yaml": "^7.2",
-        "lcobucci/jwt": "^5.5",
-        "google/common-protos": "^4.11"
+        "php": "^8.1",
+        "ext-grpc": "*",
+        "cbws/php-cbws-grpc": "dev-main#962ee17@dev",
+        "league/oauth2-client": "^2.6",
+        "symfony/yaml": "^6.0 || ^7.0",
+        "lcobucci/jwt": "^5.0",
+        "google/common-protos": "^4.0",
+        "ramsey/uuid": "^4.0"
     },
-    "minimum-stability": "dev",
     "require-dev": {
-        "phpunit/phpunit": "~8 || ~0 || ~0 || ~0 || ~0 || ~0 || ~0 || ~0 || ~0 || ~0 || ~0 || ~0 || ~0"
+        "phpunit/phpunit": "^12.0",
+        "phpstan/phpstan": "^2.0",
+        "friendsofphp/php-cs-fixer": "^3.71"
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "git@github.com:cbws/php-cbws-grpc.git"
-        }
-    ],
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Cbws\\API\\": "legacy",
             "Cbws\\Sdk\\": "src"
-        },
-        "files": ["legacy/OAuth2/Functional/RandomStr.php"]
+        }
     },
     "autoload-dev": {
         "psr-4": {
             "Cbws\\API\\Tests\\": "tests"
         }
     },
+    "scripts-aliases": {
+        "phpstan": ["stan", "analyze"]
+    },
     "scripts": {
-        "test": "phpunit --testsuite Unit"
+        "test": [
+            "phpunit --testsuite Unit"
+        ],
+        "lint": [
+            "PHP_CS_FIXER_IGNORE_ENV=true php-cs-fixer fix --show-progress dots"
+        ],
+        "phpstan": [
+            "phpstan analyse --memory-limit=-1"
+        ]
     }
 }
