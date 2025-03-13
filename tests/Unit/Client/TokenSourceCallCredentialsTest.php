@@ -28,7 +28,6 @@ class TokenSourceCallCredentialsTest extends TestCase
             'access_token' => 'Test',
         ])));
         $headers = $tokenSourceCallCredentials->credentialsPlugin();
-        self::assertIsArray($headers);
         self::assertArrayHasKey('authorization', $headers);
         self::assertEquals(['Bearer Test'], $headers['authorization']);
     }

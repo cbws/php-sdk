@@ -83,13 +83,15 @@ class Operation
             case 'type.googleapis.com/cbws.compute.v1alpha1.CreateMachineResponse':
                 assert($response->unpack() instanceof CreateMachineResponseGrpc);
 
-                /** @var TResponse $createMachineResponse */
-                return new CreateMachineResponse($response->unpack());
+                /** @var CreateMachineResponse $createMachineResponse */
+                $createMachineResponse = new CreateMachineResponse($response->unpack());
+                return $createMachineResponse;
             case 'type.googleapis.com/cbws.compute.v1alpha1.StopMachineResponse':
                 assert($response->unpack() instanceof StopMachineResponseGrpc);
 
-                /** @var TResponse $createMachineResponse */
-                return new StopMachineResponse($response->unpack());
+                /** @var StopMachineResponse $stopMachineResponse */
+                $stopMachineResponse = new StopMachineResponse($response->unpack());
+                return $stopMachineResponse;
             case 'type.googleapis.com/google.protobuf.Empty':
                 return null;
         }

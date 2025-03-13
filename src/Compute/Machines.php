@@ -100,7 +100,8 @@ class Machines
         /**
          * @var Operation<CreateMachineMetadata, CreateMachineResponse> $operation
          */
-        return new Operation($data);
+        $operation = new Operation($data);
+        return $operation;
     }
 
     /**
