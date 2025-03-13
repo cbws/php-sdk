@@ -10,10 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class MachinesTest extends TestCase
 {
-    /**
-     * @var Client
-     */
-    protected $client;
+    protected ?Client $client;
 
     public static function setUpBeforeClass(): void
     {
@@ -53,7 +50,6 @@ class MachinesTest extends TestCase
     public function test_list_machines(): void
     {
         $response = $this->client->machines()->list();
-        self::assertIsArray($response->getMachines());
         self::assertGreaterThan(0, count($response->getMachines()), 'Expected at least one machine');
     }
 
