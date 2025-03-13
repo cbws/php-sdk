@@ -42,6 +42,9 @@
         "test": [
             "phpunit --testsuite Unit"
         ],
+        "test-integration": [
+            "phpunit --testsuite Integration"
+        ],
         "lint": [
             "PHP_CS_FIXER_IGNORE_ENV=true php-cs-fixer fix --show-progress dots"
         ],
