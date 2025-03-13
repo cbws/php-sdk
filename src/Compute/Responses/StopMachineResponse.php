@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Cbws\Sdk\Compute\Responses;
 
-use Cbws\Grpc\Compute\V1alpha1\CreateMachineResponse as CreateMachineResponseGrpc;
+use Cbws\Grpc\Compute\V1alpha1\StopMachineResponse as StopMachineResponseGrpc;
 use Google\Protobuf\Internal\Message;
 
 /**
- * @implements ResponseInterface<CreateMachineResponseGrpc>
+ * @implements ResponseInterface<StopMachineResponseGrpc>
  */
-class CreateMachineResponse implements ResponseInterface
+class StopMachineResponse implements ResponseInterface
 {
-    protected CreateMachineResponseGrpc $object;
+    protected StopMachineResponseGrpc $object;
 
     /**
-     * @param CreateMachineResponseGrpc $object
+     * @param StopMachineResponseGrpc $object
      */
     public function __construct(Message $object)
     {

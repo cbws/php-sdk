@@ -9,6 +9,7 @@ use Cbws\Grpc\Compute\V1alpha1\Machine as GrpcMachine;
 use Cbws\Grpc\Longrunning\Operation as GrpcOperation;
 use Cbws\Sdk\Common\Exception\StatusException;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\Operation;
+use Cbws\Sdk\Compute\Metadata\CreateMachineMetadata;
 use Cbws\Sdk\Compute\Models\Machine;
 use Cbws\Sdk\Compute\Requests\CreateMachineRequest;
 use Cbws\Sdk\Compute\Requests\DeleteMachineRequest;
@@ -17,6 +18,7 @@ use Cbws\Sdk\Compute\Requests\ListMachinesRequest;
 use Cbws\Sdk\Compute\Requests\ResetMachineRequest;
 use Cbws\Sdk\Compute\Requests\StartMachineRequest;
 use Cbws\Sdk\Compute\Requests\StopMachineRequest;
+use Cbws\Sdk\Compute\Responses\CreateMachineResponse;
 use Cbws\Sdk\Compute\Responses\ListMachinesResponse;
 use Generator;
 
@@ -73,6 +75,8 @@ class Machines
     }
 
     /**
+     * @return Operation<CreateMachineMetadata, CreateMachineResponse>
+     *
      * @throws StatusException
      */
     public function create(string $id, Machine $machine, CreateMachineRequest $request = new CreateMachineRequest()): Operation
@@ -93,6 +97,9 @@ class Machines
             throw StatusException::fromStatus($status);
         }
 
+        /**
+         * @var Operation<CreateMachineMetadata, CreateMachineResponse> $operation
+         */
         return new Operation($data);
     }
 

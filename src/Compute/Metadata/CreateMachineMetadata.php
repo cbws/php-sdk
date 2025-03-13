@@ -7,12 +7,19 @@ namespace Cbws\Sdk\Compute\Metadata;
 use Cbws\Grpc\Compute\V1alpha1\CreateMachineMetadata as CreateMachineMetadataGrpc;
 use Cbws\Sdk\Compute\Enums\MachineState;
 use Cbws\Sdk\Compute\Models\Machine;
+use Google\Protobuf\Internal\Message;
 
-class CreateMachineMetadata
+/**
+ * @implements MetadataInterface<CreateMachineMetadataGrpc>
+ */
+class CreateMachineMetadata implements MetadataInterface
 {
     protected CreateMachineMetadataGrpc $object;
 
-    public function __construct(CreateMachineMetadataGrpc $object)
+    /**
+     * @param CreateMachineMetadataGrpc $object
+     */
+    public function __construct(Message $object)
     {
         $this->object = $object;
     }
