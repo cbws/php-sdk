@@ -52,12 +52,14 @@ class CLITokenSource implements TokenSourceContract
     {
         $object = Yaml::parseFile($filename);
 
-        $this->accessToken = $object['access_token'];
-        $this->refreshToken = $object['refresh_token'] ?? null;
-        $this->expiry = DateTimeImmutable::createFromFormat(DATE_RFC3339_EXTENDED, $object['expires_in']) ?: null;
-        $this->expiresIn = $object['expires_in'] ?? null;
-        $this->tokenType = $object['token_type'] ?? 'bearer';
-        $this->projectName = $object['project'] ?? null;
+        $token = $object['oauth_token'];
+
+        $this->accessToken = $token['accesstoken'];
+        $this->refreshToken = $token['refreshtoken'] ?? null;
+        $this->expiry = DateTimeImmutable::createFromFormat(DATE_RFC3339_EXTENDED, $token['expiresin']) ?: null;
+        $this->expiresIn = $token['expiresin'] ?? null;
+        $this->tokenType = $token['tokentype'] ?? 'bearer';
+        $this->projectName = $object['project_name'] ?? null;
     }
 
     protected function toFile(): array
