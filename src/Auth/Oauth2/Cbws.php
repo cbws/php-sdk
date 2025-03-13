@@ -37,7 +37,7 @@ class Cbws extends AbstractProvider
 
     public function getResourceOwnerDetailsUrl(AccessToken $token): string
     {
-        return 'https://'.$this->getAccountsHostname().'/oauth2/token'; // TODO
+        return 'https://'.$this->getAccountsHostname().'/userinfo';
     }
 
     /**
@@ -57,6 +57,6 @@ class Cbws extends AbstractProvider
 
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
-        // TODO: Implement createResourceOwner() method.
+        return new Principal($response['sub'], $response['email']);
     }
 }
