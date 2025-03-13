@@ -10,7 +10,7 @@ class RememberAccessToken implements TokenSource
 {
     protected TokenSource $tokenSource;
 
-    protected ?AccessTokenInterface $token;
+    protected ?AccessTokenInterface $token = null;
 
     public function __construct(TokenSource $tokenSource)
     {
