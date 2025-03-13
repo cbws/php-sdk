@@ -6,16 +6,12 @@ namespace Cbws\Sdk\Compute\Responses;
 
 use Cbws\Grpc\Compute\V1alpha1\ListMachinesResponse as ListMachinesResponseGrpc;
 use Cbws\Grpc\Compute\V1alpha1\Machine as MachineGrpc;
+use Cbws\Sdk\Compute\Machines;
 use Cbws\Sdk\Compute\Models\Machine;
 
 class ListMachinesResponse
 {
-    protected ListMachinesResponseGrpc $object;
-
-    public function __construct(ListMachinesResponseGrpc $object)
-    {
-        $this->object = $object;
-    }
+    public function __construct(protected ListMachinesResponseGrpc $object, protected Machines $client) {}
 
     /**
      * @return Machine[]
@@ -26,7 +22,7 @@ class ListMachinesResponse
 
         /** @var MachineGrpc $machine */
         foreach ($this->object->getMachines() as $machine) {
-            $machines[] = new Machine($machine);
+            $machines[] = new Machine($machine, $this->client);
         }
 
         return $machines;

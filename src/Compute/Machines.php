@@ -49,7 +49,7 @@ class Machines
             throw StatusException::fromStatus($status);
         }
 
-        return new ListMachinesResponse($data);
+        return new ListMachinesResponse($data, $this);
     }
 
     /**
@@ -117,7 +117,7 @@ class Machines
             throw StatusException::fromStatus($status);
         }
 
-        return new Machine($data);
+        return new Machine($data, $this);
     }
 
     /**
@@ -144,7 +144,7 @@ class Machines
     /**
      * @throws StatusException
      */
-    public function startMachine(string $id, StartMachineRequest $request = new StartMachineRequest()): Operation
+    public function start(string $id, StartMachineRequest $request = new StartMachineRequest()): Operation
     {
         $request = $request->withName("projects/{$this->client->getProject()}/machines/{$id}");
         $call = $this->client->getClient()->StartMachine($request->toGrpc(), [
