@@ -97,11 +97,8 @@ class Machines
             throw StatusException::fromStatus($status);
         }
 
-        /**
-         * @var Operation<CreateMachineMetadata, CreateMachineResponse> $operation
-         */
-        $operation = new Operation($data);
-        return $operation;
+        /** @phpstan-var Operation<CreateMachineMetadata, CreateMachineResponse> */
+        return new Operation($data);
     }
 
     /**
