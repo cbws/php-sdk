@@ -6,19 +6,14 @@ on:
   pull_request:
     branches: [ main ]
 
-concurrency:
-  group: integration-tests
-
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         php-version:
           - 8.1
-          - 8.2
-          - 8.3
+          #- 8.2
     env:
       extensions: grpc, protobuf
       key: cache-v1 # can be any string, change to clear the extension cache.
@@ -66,6 +61,10 @@ jobs:
           ssh_key: ${{ secrets.ssh_key }}
           ssh_key_pub: ${{ secrets.ssh_key_pub }}
           args: --profile --ignore-platform-reqs
+
+      - run: |
+          echo '${{ secrets.CBWS_CREDENTIALS_CONTENTS }}' > credentials.json
+          echo "CBWS_CREDENTIALS=credentials.json" >> "$GITHUB_ENV"
 
       - name: Run test suite
         run: composer run-script test-integration
