@@ -26,7 +26,7 @@ class ResetMachineRequest
 
     public function withName(?string $name = null): self
     {
-        $this->object->setName($name);
+        $this->object->setName($name ?? '');
 
         return $this;
     }

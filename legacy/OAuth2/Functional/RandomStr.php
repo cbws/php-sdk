@@ -6,6 +6,9 @@ namespace Cbws\API\OAuth2\Functional;
 
 use RangeException;
 
+/**
+ * @return non-empty-string
+ */
 function random_str(
     int $length = 64,
     string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',

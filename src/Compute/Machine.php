@@ -33,9 +33,9 @@ class Machine
         return $this->object->getName();
     }
 
-    public function withName(string $name): self
+    public function withName(?string $name = null): self
     {
-        $this->object->setName($name);
+        $this->object->setName($name ?? '');
 
         return $this;
     }

@@ -3,6 +3,7 @@
 ## TODOS
 
  - check versions of libraries to support lower versions if possible
+ - scopes default `[]`
 
 ![release][release]
 ![downloads][downloads]

@@ -30,6 +30,9 @@ class Credentials
         return $this->json;
     }
 
+    /**
+     * @param string[] $scopes
+     */
     public static function findDefault(array $scopes): ?self
     {
         // First, try the environment variable.
@@ -54,17 +57,24 @@ class Credentials
         return null;
     }
 
+    /**
+     * @param string[] $scopes
+     * @throws JsonException
+     */
     public static function fromCredentialsFile(string $filename, array $scopes): self
     {
-        return self::fromJSON(file_get_contents($filename), $scopes);
+        return self::fromJSON(file_get_contents($filename) ?: '', $scopes);
     }
 
     /**
+     * @param string[] $scopes
+     *
      * @throws JsonException
      * @throws Exception
      */
     public static function fromJSON(string $json, array $scopes): self
     {
+        // TODO make class
         $data = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
 
         if ($data->type !== 'service_account') {
@@ -76,6 +86,6 @@ class Credentials
 
     public static function wellKnownFile(): string
     {
-        return $_SERVER['HOME'].DIRECTORY_SEPARATOR.'.config'.DIRECTORY_SEPARATOR.'cbws'.DIRECTORY_SEPARATOR.'cbws.json';
+        return sprintf("%s/.config/cbws/cbws.json", $_SERVER['HOME']);
     }
 }
