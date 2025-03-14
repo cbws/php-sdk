@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Cbws\Sdk\Compute\Models;
 
 use Cbws\Grpc\Compute\V1alpha1\Machine as MachineGrpc;
+use Cbws\Sdk\Common\EmptyResponse;
 use Cbws\Sdk\Common\Exception\StatusException;
-use Cbws\Sdk\Common\Longrunning\V1alpha1\Operation;
+use Cbws\Sdk\Common\Longrunning\Model\Operation;
 use Cbws\Sdk\Compute\Enums\MachineState;
 use Cbws\Sdk\Compute\Machines;
 use Cbws\Sdk\Compute\Metadata\DeleteMachineMetadata;
@@ -164,7 +165,7 @@ class Machine
     }
 
     /**
-     * @return Operation<DeleteMachineMetadata, null>
+     * @return Operation<DeleteMachineMetadata, EmptyResponse>
      *
      * @throws StatusException
      */

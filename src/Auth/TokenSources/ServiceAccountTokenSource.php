@@ -92,7 +92,12 @@ class ServiceAccountTokenSource implements TokenSourceContract
             !is_string($data->project_name) ||
             !is_string($data->private_key) ||
             !is_string($data->client_email) ||
-            !is_string($data->private_key_id)
+            !is_string($data->private_key_id) ||
+            strlen($data->client_id) === 0 ||
+            strlen($data->project_name) === 0 ||
+            strlen($data->private_key) === 0 ||
+            strlen($data->client_email) === 0 ||
+            strlen($data->private_key_id) === 0
         ) {
             throw new InvalidCredentialException('Invalid credentials data');
         }
@@ -124,6 +129,9 @@ class ServiceAccountTokenSource implements TokenSourceContract
         ]);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function getFileLocation(): string
     {
         return $_SERVER['HOME'].DIRECTORY_SEPARATOR.'.config'.DIRECTORY_SEPARATOR.'cbws'.DIRECTORY_SEPARATOR.'cbws.json';

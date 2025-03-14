@@ -2,22 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Cbws\Sdk\Compute\Metadata;
+namespace Cbws\Sdk\Common\Longrunning;
 
 use Google\Protobuf\Internal\Message;
 
 /**
  * @template T of Message
  */
-interface MetadataInterface
+interface ResponseInterface
 {
-    /**
-     * @param T $grpc
-     */
     public function __construct(Message $grpc);
 
-    /**
-     * @return T
-     */
     public function toGrpc(): Message;
 }

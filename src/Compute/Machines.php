@@ -7,8 +7,9 @@ namespace Cbws\Sdk\Compute;
 use Cbws\Grpc\Compute\V1alpha1\ListMachinesResponse as GrpcListMachinesResponse;
 use Cbws\Grpc\Compute\V1alpha1\Machine as GrpcMachine;
 use Cbws\Grpc\Longrunning\Operation as GrpcOperation;
+use Cbws\Sdk\Common\EmptyResponse;
 use Cbws\Sdk\Common\Exception\StatusException;
-use Cbws\Sdk\Common\Longrunning\V1alpha1\Operation;
+use Cbws\Sdk\Common\Longrunning\Model\Operation;
 use Cbws\Sdk\Compute\Metadata\CreateMachineMetadata;
 use Cbws\Sdk\Compute\Metadata\DeleteMachineMetadata;
 use Cbws\Sdk\Compute\Metadata\ResetMachineMetadata;
@@ -31,12 +32,7 @@ use Generator;
 
 class Machines
 {
-    protected Client $client;
-
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
+    public function __construct(protected Client $client) {}
 
     /**
      * List machines in the project.
@@ -105,7 +101,7 @@ class Machines
         }
 
         /** @phpstan-var Operation<CreateMachineMetadata, CreateMachineResponse> */
-        return new Operation($data);
+        return new Operation($data, CreateMachineMetadata::class, CreateMachineResponse::class, $this->client->operations());
     }
 
     /**
@@ -148,7 +144,7 @@ class Machines
         }
 
         /** @phpstan-var Operation<StopMachineMetadata, StopMachineResponse> */
-        return new Operation($data);
+        return new Operation($data, StopMachineMetadata::class, StopMachineResponse::class, $this->client->operations());
     }
 
     /**
@@ -172,7 +168,7 @@ class Machines
         }
 
         /** @phpstan-var Operation<StartMachineMetadata, StartMachineResponse> */
-        return new Operation($data);
+        return new Operation($data, StartMachineMetadata::class, StartMachineResponse::class, $this->client->operations());
     }
 
     /**
@@ -196,11 +192,11 @@ class Machines
         }
 
         /** @phpstan-var Operation<ResetMachineMetadata, ResetMachineResponse> */
-        return new Operation($data);
+        return new Operation($data, ResetMachineMetadata::class, ResetMachineResponse::class, $this->client->operations());
     }
 
     /**
-     * @return Operation<DeleteMachineMetadata, null>
+     * @return Operation<DeleteMachineMetadata, EmptyResponse>
      *
      * @throws StatusException
      */
@@ -219,7 +215,7 @@ class Machines
             throw StatusException::fromStatus($status);
         }
 
-        /** @phpstan-var Operation<DeleteMachineMetadata, null> */
-        return new Operation($data);
+        /** @phpstan-var Operation<DeleteMachineMetadata, EmptyResponse> */
+        return new Operation($data, DeleteMachineMetadata::class, EmptyResponse::class, $this->client->operations());
     }
 }

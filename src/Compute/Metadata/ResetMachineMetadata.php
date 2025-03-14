@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cbws\Sdk\Compute\Metadata;
 
 use Cbws\Grpc\Compute\V1alpha1\ResetMachineMetadata as ResetMachineMetadataGrpc;
+use Cbws\Sdk\Common\Longrunning\MetadataInterface;
 use Google\Protobuf\Internal\Message;
 
 /**

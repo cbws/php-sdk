@@ -38,6 +38,7 @@ class TokenSourceCallCredentials
 
     public function getCallCredentials(): CallCredentials
     {
+        /** @phpstan-ignore argument.type */
         return CallCredentials::createFromPlugin($this->getClosure());
     }
 }
