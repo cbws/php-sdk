@@ -71,7 +71,7 @@ class CLITokenSource implements TokenSourceContract
     }
 
     /**
-     * @return array{project_name?: string, 'oauth_token': array{'accesstoken': string, 'expiresin': int, 'expiry': string, 'refreshtoken': string, 'tokentype': string}}
+     * @return array{project_name?: string, 'oauth_token': array{'accesstoken': string, 'expiresin': int, 'expiry': non-falsy-string|null, 'refreshtoken': string|null, 'tokentype': string}}
      */
     protected function toFile(): array
     {
@@ -80,7 +80,7 @@ class CLITokenSource implements TokenSourceContract
             'oauth_token' => [
                 'accesstoken' => $this->accessToken,
                 'expiresin' => $this->expiresIn,
-                'expiry' => $this->expiry->format(DATE_RFC3339_EXTENDED),
+                'expiry' => $this->expiry?->format(DATE_RFC3339_EXTENDED),
                 'refreshtoken' => $this->refreshToken,
                 'tokentype' => $this->tokenType,
             ],
