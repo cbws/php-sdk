@@ -16,6 +16,8 @@ class JWTClientCredentials extends ClientCredentials
     /**
      * @param array<string, mixed> $defaults
      * @param array<string, mixed> $options
+     *
+     * @return array{'client_assertion_type': string}
      */
     public function prepareRequestParameters(array $defaults, array $options): array
     {

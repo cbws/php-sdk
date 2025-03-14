@@ -25,6 +25,11 @@ class Operations
     }
 
     /**
+     * @template TMetadata of object
+     * @template TResponse of object
+     *
+     * @return Operation<TMetadata, TResponse>
+     *
      * @throws StatusException
      */
     public function getOperation(string $name, ?GetOperationRequest $request = null): Operation
@@ -44,10 +49,16 @@ class Operations
             throw StatusException::fromStatus($status);
         }
 
+        /** @phpstan-var Operation<TMetadata, TResponse> */
         return new Operation($data);
     }
 
     /**
+     * @template TMetadata of object
+     * @template TResponse of object
+     *
+     * @return Operation<TMetadata, TResponse>
+     *
      * @throws StatusException
      */
     public function waitOperation(string $name, int $timeoutMilliseconds = 1000, ?WaitOperationRequest $request = null): Operation
@@ -65,6 +76,7 @@ class Operations
             throw StatusException::fromStatus($status);
         }
 
+        /** @phpstan-var Operation<TMetadata, TResponse> */
         return new Operation($data);
     }
 
@@ -132,6 +144,11 @@ class Operations
     }
 
     /**
+     * @template TMetadata of object
+     * @template TResponse of object
+     *
+     * @return Operation<TMetadata, TResponse>
+     *
      * @throws StatusException
      */
     public function awaitOperation(string $name): Operation
@@ -141,6 +158,7 @@ class Operations
             sleep(1);
         } while (!$operation->getDone());
 
+        /** @phpstan-var Operation<TMetadata, TResponse> */
         return $operation;
     }
 }

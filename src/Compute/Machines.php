@@ -10,6 +10,10 @@ use Cbws\Grpc\Longrunning\Operation as GrpcOperation;
 use Cbws\Sdk\Common\Exception\StatusException;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\Operation;
 use Cbws\Sdk\Compute\Metadata\CreateMachineMetadata;
+use Cbws\Sdk\Compute\Metadata\DeleteMachineMetadata;
+use Cbws\Sdk\Compute\Metadata\ResetMachineMetadata;
+use Cbws\Sdk\Compute\Metadata\StartMachineMetadata;
+use Cbws\Sdk\Compute\Metadata\StopMachineMetadata;
 use Cbws\Sdk\Compute\Models\Machine;
 use Cbws\Sdk\Compute\Requests\CreateMachineRequest;
 use Cbws\Sdk\Compute\Requests\DeleteMachineRequest;
@@ -20,6 +24,9 @@ use Cbws\Sdk\Compute\Requests\StartMachineRequest;
 use Cbws\Sdk\Compute\Requests\StopMachineRequest;
 use Cbws\Sdk\Compute\Responses\CreateMachineResponse;
 use Cbws\Sdk\Compute\Responses\ListMachinesResponse;
+use Cbws\Sdk\Compute\Responses\ResetMachineResponse;
+use Cbws\Sdk\Compute\Responses\StartMachineResponse;
+use Cbws\Sdk\Compute\Responses\StopMachineResponse;
 use Generator;
 
 class Machines
@@ -121,6 +128,8 @@ class Machines
     }
 
     /**
+     * @return Operation<StopMachineMetadata, StopMachineResponse>
+     *
      * @throws StatusException
      */
     public function stop(string $id, StopMachineRequest $request = new StopMachineRequest()): Operation
@@ -138,10 +147,13 @@ class Machines
             throw StatusException::fromStatus($status);
         }
 
+        /** @phpstan-var Operation<StopMachineMetadata, StopMachineResponse> */
         return new Operation($data);
     }
 
     /**
+     * @return Operation<StartMachineMetadata, StartMachineResponse>
+     *
      * @throws StatusException
      */
     public function start(string $id, StartMachineRequest $request = new StartMachineRequest()): Operation
@@ -159,10 +171,13 @@ class Machines
             throw StatusException::fromStatus($status);
         }
 
+        /** @phpstan-var Operation<StartMachineMetadata, StartMachineResponse> */
         return new Operation($data);
     }
 
     /**
+     * @return Operation<ResetMachineMetadata, ResetMachineResponse>
+     *
      * @throws StatusException
      */
     public function reset(string $id, ResetMachineRequest $request = new ResetMachineRequest()): Operation
@@ -180,10 +195,13 @@ class Machines
             throw StatusException::fromStatus($status);
         }
 
+        /** @phpstan-var Operation<ResetMachineMetadata, ResetMachineResponse> */
         return new Operation($data);
     }
 
     /**
+     * @return Operation<DeleteMachineMetadata, null>
+     *
      * @throws StatusException
      */
     public function delete(string $id, DeleteMachineRequest $request = new DeleteMachineRequest()): Operation
@@ -201,6 +219,7 @@ class Machines
             throw StatusException::fromStatus($status);
         }
 
+        /** @phpstan-var Operation<DeleteMachineMetadata, null> */
         return new Operation($data);
     }
 }

@@ -1,7 +1,9 @@
 parameters:
-    level: 5
+    level: 6
     paths:
         - src/
         - tests/
     checkDynamicProperties: true
     checkFunctionNameCase: true
+    ignoreErrors:
+        - identifier: method.templateTypeNotInParameter

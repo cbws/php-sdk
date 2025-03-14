@@ -49,6 +49,9 @@ class CLITokenSource implements TokenSourceContract
         $this->provider = new Cbws();
     }
 
+    /**
+     * @param non-empty-string $filename
+     */
     protected function parseFile(string $filename): void
     {
         $object = Yaml::parseFile($filename);
@@ -66,6 +69,9 @@ class CLITokenSource implements TokenSourceContract
         $this->projectName = $object['project_name'] ?? null;
     }
 
+    /**
+     * @return array{'project_name': string|void, 'oauth_token': array{'accesstoken': string, 'expiresin': int, 'expiry': string, 'refreshtoken': string, 'tokentype': string}}
+     */
     protected function toFile(): array
     {
         return array_filter([

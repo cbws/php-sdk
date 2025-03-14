@@ -10,12 +10,15 @@ class Principal implements ResourceOwnerInterface
 {
     public function __construct(protected string $id, protected string $email) {}
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function toArray()
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
     {
         return [
             'id' => $this->id,

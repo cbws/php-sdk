@@ -48,6 +48,11 @@ class Cbws extends AbstractProvider
         return [];
     }
 
+    /**
+     * @param array{'error': string, 'error_description': string, 'status_code': int} $data
+     *
+     * @throws IdentityProviderException
+     */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         if ($response->getStatusCode() !== 200) {
@@ -55,6 +60,9 @@ class Cbws extends AbstractProvider
         }
     }
 
+    /**
+     * @param array{'sub': string, 'email': string} $response
+     */
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
         return new Principal($response['sub'], $response['email']);

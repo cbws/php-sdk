@@ -9,10 +9,17 @@ use Cbws\Sdk\Common\Exception\StatusException;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\Operation;
 use Cbws\Sdk\Compute\Enums\MachineState;
 use Cbws\Sdk\Compute\Machines;
+use Cbws\Sdk\Compute\Metadata\DeleteMachineMetadata;
+use Cbws\Sdk\Compute\Metadata\ResetMachineMetadata;
+use Cbws\Sdk\Compute\Metadata\StartMachineMetadata;
+use Cbws\Sdk\Compute\Metadata\StopMachineMetadata;
 use Cbws\Sdk\Compute\Requests\DeleteMachineRequest;
 use Cbws\Sdk\Compute\Requests\ResetMachineRequest;
 use Cbws\Sdk\Compute\Requests\StartMachineRequest;
 use Cbws\Sdk\Compute\Requests\StopMachineRequest;
+use Cbws\Sdk\Compute\Responses\ResetMachineResponse;
+use Cbws\Sdk\Compute\Responses\StartMachineResponse;
+use Cbws\Sdk\Compute\Responses\StopMachineResponse;
 
 class Machine
 {
@@ -27,7 +34,7 @@ class Machine
      */
     protected array $updatedFields = [];
 
-    public function __construct(?MachineGrpc $object = null, $client = null)
+    public function __construct(?MachineGrpc $object = null, ?Machines $client = null)
     {
         $this->object = $object ?? new MachineGrpc();
         $this->client = $client;
@@ -127,6 +134,8 @@ class Machine
     }
 
     /**
+     * @return Operation<StopMachineMetadata, StopMachineResponse>
+     *
      * @throws StatusException
      */
     public function stop(StopMachineRequest $request = new StopMachineRequest()): Operation
@@ -135,6 +144,8 @@ class Machine
     }
 
     /**
+     * @return Operation<StartMachineMetadata, StartMachineResponse>
+     *
      * @throws StatusException
      */
     public function start(StartMachineRequest $request = new StartMachineRequest()): Operation
@@ -143,6 +154,8 @@ class Machine
     }
 
     /**
+     * @return Operation<ResetMachineMetadata, ResetMachineResponse>
+     *
      * @throws StatusException
      */
     public function reset(ResetMachineRequest $request = new ResetMachineRequest()): Operation
@@ -151,6 +164,8 @@ class Machine
     }
 
     /**
+     * @return Operation<DeleteMachineMetadata, null>
+     *
      * @throws StatusException
      */
     public function delete(DeleteMachineRequest $request = new DeleteMachineRequest()): Operation

@@ -18,7 +18,7 @@ use Exception;
 
 /**
  * @template TMetadata of object
- * @template TResponse of object
+ * @template TResponse of ?object
  */
 class Operation
 {
