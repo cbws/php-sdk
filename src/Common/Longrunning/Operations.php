@@ -57,6 +57,8 @@ class Operations
     }
 
     /**
+     * Wait until the timeout or there has been progress in the operation.
+     *
      * @template TMetadata of MetadataInterface
      * @template TResponse of ResponseInterface
      *
@@ -171,8 +173,7 @@ class Operations
     public function awaitOperation(string $name, string $metadataType, string $responseType): Operation
     {
         do {
-            $operation = $this->getOperation($name, $metadataType, $responseType);
-            sleep(1);
+            $operation = $this->waitOperation($name, $metadataType, $responseType);
         } while (!$operation->getDone());
 
         /** @phpstan-var Operation<TMetadata, TResponse> */
