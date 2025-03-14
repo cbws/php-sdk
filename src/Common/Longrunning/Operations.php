@@ -173,7 +173,9 @@ class Operations
     public function awaitOperation(string $name, string $metadataType, string $responseType): Operation
     {
         do {
-            $operation = $this->waitOperation($name, $metadataType, $responseType);
+            // Wait up to 10 seconds for each wait, however the backend will yield early when the operation has finished
+            // so this is more efficient.
+            $operation = $this->waitOperation($name, $metadataType, $responseType, 10000);
         } while (!$operation->getDone());
 
         /** @phpstan-var Operation<TMetadata, TResponse> */
