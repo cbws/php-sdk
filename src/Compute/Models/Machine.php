@@ -141,6 +141,8 @@ class Machine
      */
     public function stop(StopMachineRequest $request = new StopMachineRequest()): Operation
     {
+        assert($this->client !== null);
+
         return $this->client->stop($this->getID(), $request);
     }
 
@@ -151,6 +153,8 @@ class Machine
      */
     public function start(StartMachineRequest $request = new StartMachineRequest()): Operation
     {
+        assert($this->client !== null);
+
         return $this->client->start($this->getID(), $request);
     }
 
@@ -161,6 +165,8 @@ class Machine
      */
     public function reset(ResetMachineRequest $request = new ResetMachineRequest()): Operation
     {
+        assert($this->client !== null);
+
         return $this->client->reset($this->getID(), $request);
     }
 
@@ -171,6 +177,8 @@ class Machine
      */
     public function delete(DeleteMachineRequest $request = new DeleteMachineRequest()): Operation
     {
+        assert($this->client !== null);
+
         return $this->client->delete($this->getID(), $request);
     }
 

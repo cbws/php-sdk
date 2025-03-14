@@ -48,18 +48,21 @@ class MachinesTest extends TestCase
 
     public function test_list_machines(): void
     {
+        assert($this->client !== null);
         $response = $this->client->machines()->list();
         self::assertGreaterThan(0, count($response->getMachines()), 'Expected at least one machine');
     }
 
     public function test_get_machine(): void
     {
+        assert($this->client !== null);
         $machine = $this->client->machines()->get('php-cbws-test1');
         self::assertEquals('zones/nl-ein-1/types/g2.1', $machine->getType(), 'Expected machine to have g2.1 type');
     }
 
     public function test_stop_machine(): void
     {
+        assert($this->client !== null);
         $machine = $this->client->machines()->get('php-cbws-test1');
         $operation = $machine->stop()->await();
 
@@ -71,6 +74,7 @@ class MachinesTest extends TestCase
 
     public function test_start_machine(): void
     {
+        assert($this->client !== null);
         $machine = $this->client->machines()->get('php-cbws-test1');
         $operation = $machine->start()->await();
 
