@@ -38,7 +38,8 @@ class CLITokenSource implements TokenSourceContract
     protected Cbws $provider;
 
     /**
-     * @param string[] $scopes
+     * @param non-empty-string $filename
+     * @param string[]         $scopes
      */
     public function __construct(string $filename, array $scopes = [])
     {
@@ -70,7 +71,7 @@ class CLITokenSource implements TokenSourceContract
     }
 
     /**
-     * @return array{'project_name': string|void, 'oauth_token': array{'accesstoken': string, 'expiresin': int, 'expiry': string, 'refreshtoken': string, 'tokentype': string}}
+     * @return array{project_name?: string, 'oauth_token': array{'accesstoken': string, 'expiresin': int, 'expiry': string, 'refreshtoken': string, 'tokentype': string}}
      */
     protected function toFile(): array
     {
@@ -126,6 +127,9 @@ class CLITokenSource implements TokenSourceContract
         $this->expiry = $token->getExpires() ? (new DateTimeImmutable())->setTimestamp($token->getExpires()) : null;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function getFileLocation(): string
     {
         if (getenv('CBWS_CONFIG_FILE')) {

@@ -22,8 +22,7 @@ class MachinesTest extends TestCase
         $operation = $client->machines()->create(
             'php-cbws-test1',
             $machine,
-        );
-        $operation = $client->operations()->awaitOperation($operation->getName());
+        )->await();
 
         if ($operation->getError() !== null) {
             echo 'Got error during create '.$operation->getError().PHP_EOL;
@@ -62,8 +61,7 @@ class MachinesTest extends TestCase
     public function test_stop_machine(): void
     {
         $machine = $this->client->machines()->get('php-cbws-test1');
-        $operation = $machine->stop();
-        $operation = $this->client->operations()->awaitOperation($operation->getName());
+        $operation = $machine->stop()->await();
 
         if ($operation->getError() !== null) {
             throw $operation->getError();
@@ -74,8 +72,7 @@ class MachinesTest extends TestCase
     public function test_start_machine(): void
     {
         $machine = $this->client->machines()->get('php-cbws-test1');
-        $operation = $machine->start();
-        $operation = $this->client->operations()->awaitOperation($operation->getName());
+        $operation = $machine->start()->await();
 
         if ($operation->getError() !== null) {
             throw $operation->getError();
@@ -110,8 +107,7 @@ class MachinesTest extends TestCase
 
             echo 'Cleaning up machine '.$machine->getName().PHP_EOL;
 
-            $operation = $machine->delete();
-            $operation = $client->operations()->awaitOperation($operation->getName());
+            $operation = $machine->delete()->await();
 
             if ($operation->getError() !== null) {
                 echo 'Got error during delete '.$operation->getError().PHP_EOL;

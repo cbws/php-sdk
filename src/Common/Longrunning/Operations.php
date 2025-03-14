@@ -7,10 +7,10 @@ namespace Cbws\Sdk\Common\Longrunning;
 use Cbws\Grpc\Longrunning\Operation as GrpcOperation;
 use Cbws\Grpc\Longrunning\OperationsClient;
 use Cbws\Sdk\Common\Exception\StatusException;
+use Cbws\Sdk\Common\Longrunning\Model\Operation;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\CancelOperationRequest;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\DeleteOperationRequest;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\GetOperationRequest;
-use Cbws\Sdk\Common\Longrunning\V1alpha1\Operation;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\WaitOperationRequest;
 use Generator;
 use Google\Protobuf\GPBEmpty;
@@ -25,14 +25,17 @@ class Operations
     }
 
     /**
-     * @template TMetadata of object
-     * @template TResponse of object
+     * @template TMetadata of MetadataInterface
+     * @template TResponse of ResponseInterface
+     *
+     * @param class-string<TMetadata> $metadataType
+     * @param class-string<TResponse> $responseType
      *
      * @return Operation<TMetadata, TResponse>
      *
      * @throws StatusException
      */
-    public function getOperation(string $name, ?GetOperationRequest $request = null): Operation
+    public function getOperation(string $name, string $metadataType, string $responseType, ?GetOperationRequest $request = null): Operation
     {
         if ($request === null) {
             $request = new GetOperationRequest();
@@ -50,18 +53,21 @@ class Operations
         }
 
         /** @phpstan-var Operation<TMetadata, TResponse> */
-        return new Operation($data);
+        return new Operation($data, $metadataType, $responseType, $this);
     }
 
     /**
-     * @template TMetadata of object
-     * @template TResponse of object
+     * @template TMetadata of MetadataInterface
+     * @template TResponse of ResponseInterface
+     *
+     * @param class-string<TMetadata> $metadataType
+     * @param class-string<TResponse> $responseType
      *
      * @return Operation<TMetadata, TResponse>
      *
      * @throws StatusException
      */
-    public function waitOperation(string $name, int $timeoutMilliseconds = 1000, ?WaitOperationRequest $request = null): Operation
+    public function waitOperation(string $name, string $metadataType, string $responseType, int $timeoutMilliseconds = 1000, ?WaitOperationRequest $request = null): Operation
     {
         $request ??= new WaitOperationRequest();
 
@@ -77,7 +83,7 @@ class Operations
         }
 
         /** @phpstan-var Operation<TMetadata, TResponse> */
-        return new Operation($data);
+        return new Operation($data, $metadataType, $responseType, $this);
     }
 
     /**
@@ -123,15 +129,21 @@ class Operations
     /**
      * Poll the operation and yield changed operation changes until the operation finishes.
      *
+     * @template TMetadata of MetadataInterface
+     * @template TResponse of ResponseInterface
+     *
+     * @param class-string<TMetadata> $metadataType
+     * @param class-string<TResponse> $responseType
+     *
      * @throws StatusException
      */
-    public function pollOperation(string $name): Generator
+    public function pollOperation(string $name, string $metadataType, string $responseType): Generator
     {
         $lastOperation = null;
 
         do {
             // Wait for operation to finish with default 1 second timeout
-            $operation = $this->waitOperation($name);
+            $operation = $this->waitOperation($name, $metadataType, $responseType);
 
             // If operation hasn't changed don't yield changed operation to caller
             if ($operation === $lastOperation) {
@@ -144,17 +156,22 @@ class Operations
     }
 
     /**
-     * @template TMetadata of object
-     * @template TResponse of object
+     * Wait until the operation has finished, either successfully or with an error.
+     *
+     * @template TMetadata of MetadataInterface
+     * @template TResponse of ResponseInterface
+     *
+     * @param class-string<TMetadata> $metadataType
+     * @param class-string<TResponse> $responseType
      *
      * @return Operation<TMetadata, TResponse>
      *
      * @throws StatusException
      */
-    public function awaitOperation(string $name): Operation
+    public function awaitOperation(string $name, string $metadataType, string $responseType): Operation
     {
         do {
-            $operation = $this->getOperation($name);
+            $operation = $this->getOperation($name, $metadataType, $responseType);
             sleep(1);
         } while (!$operation->getDone());
 

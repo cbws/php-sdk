@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cbws\Sdk\Compute\Responses;
 
 use Cbws\Grpc\Compute\V1alpha1\ResetMachineResponse as ResetMachineResponseGrpc;
+use Cbws\Sdk\Common\Longrunning\ResponseInterface;
 use Google\Protobuf\Internal\Message;
 
 /**

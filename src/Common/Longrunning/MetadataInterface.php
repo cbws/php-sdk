@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Cbws\Sdk\Compute\Responses;
+namespace Cbws\Sdk\Common\Longrunning;
 
 use Google\Protobuf\Internal\Message;
 
 /**
  * @template T of Message
  */
-interface ResponseInterface
+interface MetadataInterface
 {
     public function __construct(Message $grpc);
 

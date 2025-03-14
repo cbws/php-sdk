@@ -51,7 +51,8 @@ class Credentials
     }
 
     /**
-     * @param string[] $scopes
+     * @param non-empty-string $filename
+     * @param string[]         $scopes
      */
     public static function fromCliConfigFile(string $filename, array $scopes = []): self
     {
@@ -59,7 +60,8 @@ class Credentials
     }
 
     /**
-     * @param string[] $scopes
+     * @param non-empty-string $filename
+     * @param string[]         $scopes
      *
      * @throws FileNotFoundException|InvalidCredentialException|JsonException
      */
