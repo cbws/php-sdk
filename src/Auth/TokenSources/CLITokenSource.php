@@ -56,9 +56,12 @@ class CLITokenSource implements TokenSourceContract
     protected function parseFile(string $filename): void
     {
         $object = Yaml::parseFile($filename);
+        assert(is_array($object));
 
         $token = $object['oauth_token'];
+        assert(is_array($token));
 
+        assert(is_string($token['accesstoken']));
         $this->accessToken = $token['accesstoken'];
         $this->refreshToken = $token['refreshtoken'] ?? null;
 
@@ -136,7 +139,10 @@ class CLITokenSource implements TokenSourceContract
             return getenv('CBWS_CONFIG_FILE');
         }
 
-        return $_SERVER['HOME'].DIRECTORY_SEPARATOR.'.cbws.yaml';
+        $home = $_SERVER['HOME'];
+        assert(is_string($home));
+
+        return $home.DIRECTORY_SEPARATOR.'.cbws.yaml';
     }
 
     public function getProject(): ?string
