@@ -9,7 +9,7 @@ use Google\Protobuf\FieldMask;
 trait ReadMaskTrait
 {
     /**
-     * @return string[]
+     * @return array<string>
      */
     public function getFields(): array
     {
@@ -17,6 +17,7 @@ trait ReadMaskTrait
             return [];
         }
 
+        /** @phpstan-var array<string> */
         return iterator_to_array($this->object->getReadMask()->getPaths());
     }
 

@@ -58,6 +58,8 @@ class Machines
     /**
      * @yield Machine
      *
+     * @return Generator<Machine>
+     *
      * @throws StatusException
      */
     public function paginate(ListMachinesRequest $request = new ListMachinesRequest()): Generator

@@ -134,7 +134,10 @@ class ServiceAccountTokenSource implements TokenSourceContract
      */
     public static function getFileLocation(): string
     {
-        return $_SERVER['HOME'].DIRECTORY_SEPARATOR.'.config'.DIRECTORY_SEPARATOR.'cbws'.DIRECTORY_SEPARATOR.'cbws.json';
+        $home = $_SERVER['HOME'];
+        assert(is_string($home));
+
+        return $home.DIRECTORY_SEPARATOR.'.config'.DIRECTORY_SEPARATOR.'cbws'.DIRECTORY_SEPARATOR.'cbws.json';
     }
 
     public function getProject(): ?string
