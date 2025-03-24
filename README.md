@@ -23,6 +23,56 @@ composer require cbws/php-cbws
 
 ## Usage
 
+### Long-running operations
+
+Many interactions with the CBWS cloud platform will be long-running operations that run on the background, these can
+be polled until the operation has finished. After which the response or error will be available.
+
+### Getting the current operation status
+
+Operations have a `get()` method that fetches the current state of the operation.
+
+```php
+<?php
+$operation = $machine->stop();
+
+// Get the latest status of the operation
+$operation = $operation->get();
+
+var_dump($operation->getDone());
+var_dump($operation->getResponse());
+if ($operation->getError() !== null) {
+   throw $operation->getError();
+}
+```
+
+### Async/await with PHP fibers
+
+With the built-in PHP fibers it is possible to wait until the operation has finished, either successfully or with an error:
+
+```php
+$operation = $machine->stop();
+
+// Get the fiber that will wait until the operation has finished.
+$fiber = $operation->fiber();
+$fiber->start();
+
+while (!$fiber->isTerminated()) {
+    // Get intermediate operation state
+    $operation = $fiber->resume();
+}
+
+// Finished operation
+$operation = $fiber->getReturn();
+
+var_dump($operation->getDone());
+var_dump($operation->getResponse());
+if ($operation->getError() !== null) {
+   throw $operation->getError();
+}
+
+```
+
 ### Compute
 
 ```php
