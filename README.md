@@ -18,8 +18,8 @@ The recommended way to install composer packages is:
 composer require cbws/php-cbws
 ```
 
-[release]: https://img.shields.io/github/release/cbws/php-cbws.svg "php-cbws"
-[downloads]: https://img.shields.io/packagist/dt/cbws/php-cbws.svg?style=flat-square "php-cbws"
+[release]: https://img.shields.io/github/release/cbws/sdk.svg "sdk"
+[downloads]: https://img.shields.io/packagist/dt/cbws/sdk.svg?style=flat-square "sdk"
 
 ## Usage
 
