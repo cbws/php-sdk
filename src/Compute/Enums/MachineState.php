@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace Cbws\Sdk\Compute\Enums;
 
-use Cbws\Grpc\Compute\V1alpha1\Machine\State;
-
 enum MachineState: int
 {
-    case Unspecified = State::STATE_UNSPECIFIED;
+    case Unspecified = 0;
 
-    case Provisioning = State::STATE_PROVISIONING;
+    case Provisioning = 1;
 
-    case Staging = State::STATE_STAGING;
+    case Staging = 2;
 
-    case Running = State::STATE_RUNNING;
+    case Running = 3;
 
-    case Stopping = State::STATE_STOPPING;
+    case Stopping = 4;
 
-    case Suspending = State::STATE_SUSPENDING;
+    case Suspending = 5;
 
-    case Suspended = State::STATE_SUSPENDED;
+    case Suspended = 6;
 
-    case Repairing = State::STATE_REPAIRING;
+    case Repairing = 7;
 
-    case Terminated = State::STATE_TERMINATED;
+    case Terminated = 8;
 }
