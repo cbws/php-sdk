@@ -6,6 +6,7 @@ namespace Cbws\Sdk\Tests\Integration\Compute;
 
 use Cbws\Sdk\Compute\Client;
 use Cbws\Sdk\Compute\Models\Machine;
+use Cbws\Sdk\Compute\Requests\ListMachinesRequest;
 use PHPUnit\Framework\TestCase;
 
 class MachinesTest extends TestCase
@@ -50,6 +51,13 @@ class MachinesTest extends TestCase
     {
         assert($this->client !== null);
         $response = $this->client->machines()->list();
+        self::assertGreaterThan(0, count($response->getMachines()), 'Expected at least one machine');
+    }
+
+    public function test_list_machines_without_state(): void
+    {
+        assert($this->client !== null);
+        $response = $this->client->machines()->list((new ListMachinesRequest())->withoutState());
         self::assertGreaterThan(0, count($response->getMachines()), 'Expected at least one machine');
     }
 
