@@ -1,4 +1,13 @@
-# PHP libraries for CBWS
+# PHP SDK for CBWS cloud platform
+
+This repository contains the SDK for the CBWS cloud platform.
+
+Currently supported services:
+
+- CBWS Compute
+
+[release]: https://img.shields.io/github/release/cbws/php-sdk.svg "sdk"
+[downloads]: https://img.shields.io/packagist/dt/cbws/sdk.svg?style=flat-square "sdk"
 
 ## TODOS
 
@@ -15,11 +24,10 @@ This repository contains client libraries for the CBWS platform.
 The recommended way to install composer packages is:
 
 ```
-composer require cbws/php-cbws
+composer require cbws/sdk
 ```
 
-[release]: https://img.shields.io/github/release/cbws/sdk.svg "sdk"
-[downloads]: https://img.shields.io/packagist/dt/cbws/sdk.svg?style=flat-square "sdk"
+Note you will need the PHP gRPC extension and the PHP protobuf extensions.
 
 ## Usage
 
