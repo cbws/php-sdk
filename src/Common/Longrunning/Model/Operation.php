@@ -10,6 +10,7 @@ use Cbws\Sdk\Common\Longrunning\MetadataInterface;
 use Cbws\Sdk\Common\Longrunning\Operations;
 use Cbws\Sdk\Common\Longrunning\ResponseInterface;
 use Exception;
+use Fiber;
 
 /**
  * @template TMetadata of MetadataInterface
@@ -84,6 +85,16 @@ class Operation
     public function await(): self
     {
         return $this->client->awaitOperation($this->getName(), $this->metadataType, $this->responseType);
+    }
+
+    /**
+     * Provider Fiber for waiting until the operation has finished, either successfully or with an error.
+     *
+     * @return Fiber<?int, ?int, Operation<TMetadata, TResponse>, Operation<TMetadata, TResponse>>
+     */
+    public function fiber(): Fiber
+    {
+        return $this->client->fiberOperation($this->getName(), $this->metadataType, $this->responseType);
     }
 
     public function __debugInfo()

@@ -12,6 +12,7 @@ use Cbws\Sdk\Common\Longrunning\V1alpha1\CancelOperationRequest;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\DeleteOperationRequest;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\GetOperationRequest;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\WaitOperationRequest;
+use Fiber;
 use Generator;
 use Google\Protobuf\GPBEmpty;
 
@@ -180,5 +181,39 @@ class Operations
 
         /** @phpstan-var Operation<TMetadata, TResponse> */
         return $operation;
+    }
+
+    /**
+     * Provider Fiber for waiting until the operation has finished, either successfully or with an error.
+     *
+     * @template TMetadata of MetadataInterface
+     * @template TResponse of ResponseInterface
+     *
+     * @param class-string<TMetadata> $metadataType
+     * @param class-string<TResponse> $responseType
+     *
+     * @return Fiber<?int, ?int, Operation<TMetadata, TResponse>, Operation<TMetadata, TResponse>>
+     */
+    public function fiberOperation(string $name, string $metadataType, string $responseType): Fiber
+    {
+        /** @phpstan-var Fiber<?int, ?int, Operation<TMetadata, TResponse>, Operation<TMetadata, TResponse>> */
+        return new Fiber(function (?int $timeout = 5) use ($name, $metadataType, $responseType) {
+            do {
+                $operation = $this->waitOperation($name, $metadataType, $responseType, $timeout ?: 5);
+
+                // We should see if we can have a way of providing a non-blocking way to implement fibers, doing get over
+                // and over again would put a massive load on our service.
+                // if ($timeout !== null) {
+                //     $operation = $this->waitOperation($name, $metadataType, $responseType, $timeout);
+                // } else {
+                //     $operation = $this->getOperation($name, $metadataType, $responseType);
+                // }
+
+                /** @phpstan-var ?int $timeout */
+                $timeout = Fiber::suspend($operation);
+            } while (!$operation->getDone());
+
+            return $operation;
+        });
     }
 }
