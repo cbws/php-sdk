@@ -92,6 +92,27 @@ class MachinesTest extends TestCase
         self::assertTrue($operation->getDone());
     }
 
+    public function test_stop_machine_fiber(): void
+    {
+        assert($this->client !== null);
+        $machine = $this->client->machines()->get('php-cbws-test1');
+        $fiber = $machine->stop()->fiber();
+        $fiber->start();
+
+        // Wait until operation has finished
+        while (!$fiber->isTerminated()) {
+            $fiber->resume();
+        }
+
+        $operation = $fiber->getReturn();
+
+        if ($operation->getError() !== null) {
+            throw $operation->getError();
+        }
+        self::assertTrue($operation->getDone());
+    }
+
+
     public function test_start_machine_fiber(): void
     {
         assert($this->client !== null);
