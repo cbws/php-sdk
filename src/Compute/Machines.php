@@ -12,6 +12,7 @@ use Cbws\Sdk\Common\Exception\StatusException;
 use Cbws\Sdk\Common\Longrunning\Model\Operation;
 use Cbws\Sdk\Compute\Metadata\CreateMachineMetadata;
 use Cbws\Sdk\Compute\Metadata\DeleteMachineMetadata;
+use Cbws\Sdk\Compute\Metadata\ReinstallMachineMetadata;
 use Cbws\Sdk\Compute\Metadata\ResetMachineMetadata;
 use Cbws\Sdk\Compute\Metadata\StartMachineMetadata;
 use Cbws\Sdk\Compute\Metadata\StopMachineMetadata;
@@ -20,11 +21,15 @@ use Cbws\Sdk\Compute\Requests\CreateMachineRequest;
 use Cbws\Sdk\Compute\Requests\DeleteMachineRequest;
 use Cbws\Sdk\Compute\Requests\GetMachineRequest;
 use Cbws\Sdk\Compute\Requests\ListMachinesRequest;
+use Cbws\Sdk\Compute\Requests\ReinstallMachineRequest;
+use Cbws\Sdk\Compute\Requests\RequestMachineConsoleRequest;
 use Cbws\Sdk\Compute\Requests\ResetMachineRequest;
 use Cbws\Sdk\Compute\Requests\StartMachineRequest;
 use Cbws\Sdk\Compute\Requests\StopMachineRequest;
 use Cbws\Sdk\Compute\Responses\CreateMachineResponse;
 use Cbws\Sdk\Compute\Responses\ListMachinesResponse;
+use Cbws\Sdk\Compute\Responses\ReinstallMachineResponse;
+use Cbws\Sdk\Compute\Responses\RequestMachineConsoleResponse;
 use Cbws\Sdk\Compute\Responses\ResetMachineResponse;
 use Cbws\Sdk\Compute\Responses\StartMachineResponse;
 use Cbws\Sdk\Compute\Responses\StopMachineResponse;
@@ -195,6 +200,55 @@ class Machines
 
         /** @phpstan-var Operation<ResetMachineMetadata, ResetMachineResponse> */
         return new Operation($data, ResetMachineMetadata::class, ResetMachineResponse::class, $this->client->operations());
+    }
+
+    /**
+     * @return Operation<ReinstallMachineMetadata, ReinstallMachineResponse>
+     *
+     * @throws StatusException
+     */
+    public function reinstall(string $id, string $image, ReinstallMachineRequest $request = new ReinstallMachineRequest()): Operation
+    {
+        $request = $request
+            ->withName("projects/{$this->client->getProject()}/machines/{$id}")
+            ->withImage($image);
+        $call = $this->client->getClient()->ReinstallMachine($request->toGrpc(), [
+            'Idempotency-Key' => [$request->getIdempotencyKey()->toString()],
+        ]);
+
+        /** @var GrpcOperation $data */
+        /** @var object{ code: int, details: string } $status */
+        [$data, $status] = $call->wait();
+
+        if ($status->code !== 0) {
+            throw StatusException::fromStatus($status);
+        }
+
+        /** @phpstan-var Operation<ReinstallMachineMetadata, ReinstallMachineResponse> */
+        return new Operation($data, ReinstallMachineMetadata::class, ReinstallMachineResponse::class, $this->client->operations());
+    }
+
+    /**
+     * @return RequestMachineConsoleResponse
+     *
+     * @throws StatusException
+     */
+    public function requestConsole(string $id, RequestMachineConsoleRequest $request = new RequestMachineConsoleRequest()): RequestMachineConsoleResponse
+    {
+        $request = $request->withName("projects/{$this->client->getProject()}/machines/{$id}");
+        $call = $this->client->getClient()->RequestMachineConsole($request->toGrpc(), [
+            'Idempotency-Key' => [$request->getIdempotencyKey()->toString()],
+        ]);
+
+        /** @var \Cbws\Grpc\Compute\V1alpha1\RequestMachineConsoleRequest $data */
+        /** @var object{ code: int, details: string } $status */
+        [$data, $status] = $call->wait();
+
+        if ($status->code !== 0) {
+            throw StatusException::fromStatus($status);
+        }
+
+        return new RequestMachineConsoleResponse($data);
     }
 
     /**
