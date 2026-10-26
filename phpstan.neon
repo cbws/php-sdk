@@ -5,3 +5,6 @@ parameters:
         - tests/
     checkDynamicProperties: true
     checkFunctionNameCase: true
+    treatPhpDocTypesAsCertain: false
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon

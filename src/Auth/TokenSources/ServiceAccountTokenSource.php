@@ -7,6 +7,7 @@ namespace Cbws\Sdk\Auth\TokenSources;
 use Cbws\Sdk\Auth\Oauth2\Cbws;
 use Cbws\Sdk\Auth\Oauth2\JWTClientCredentials;
 use Cbws\Sdk\Common\Exception\FileNotFoundException;
+use Cbws\Sdk\Common\Exception\HomeNotDefinedException;
 use Cbws\Sdk\Common\Exception\InvalidCredentialException;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
@@ -60,10 +61,13 @@ class ServiceAccountTokenSource implements TokenSourceContract
      * @throws JsonException
      */
     public function __construct(
-        string $filename,
+        ?string $filename = null,
         array $scopes = [],
     ) {
-        $this->parseFile($filename);
+        if ($filename !== null) {
+            $this->parseFile($filename);
+        }
+
         $this->scopes = $scopes;
 
         $this->provider = new Cbws();
@@ -71,19 +75,27 @@ class ServiceAccountTokenSource implements TokenSourceContract
     }
 
     /**
-     * @throws FileNotFoundException
      * @throws InvalidCredentialException
      * @throws JsonException
      */
     protected function parseFile(string $filename): void
     {
-        $file = file_get_contents($filename);
+        $json = file_get_contents($filename);
 
-        if (!$file) {
+        if (!$json) {
             throw new FileNotFoundException("File not found: {$filename}");
         }
 
-        $data = json_decode($file, false, 512, JSON_THROW_ON_ERROR);
+        $this->parse($json);
+    }
+
+    /**
+     * @throws InvalidCredentialException
+     * @throws JsonException
+     */
+    protected function parse(string $json): void
+    {
+        $data = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
 
         if (
             !$data instanceof stdClass ||
@@ -131,13 +143,33 @@ class ServiceAccountTokenSource implements TokenSourceContract
 
     /**
      * @return non-empty-string
+     *
+     * @throws HomeNotDefinedException
      */
     public static function getFileLocation(): string
     {
+        if (!isset($_SERVER['HOME']) && !is_string($_SERVER['HOME'])) {
+            throw new HomeNotDefinedException();
+        }
+        /** @var string $home */
         $home = $_SERVER['HOME'];
-        assert(is_string($home));
 
         return $home.DIRECTORY_SEPARATOR.'.config'.DIRECTORY_SEPARATOR.'cbws'.DIRECTORY_SEPARATOR.'cbws.json';
+    }
+
+    /**
+     * @param string[] $scopes
+     *
+     * @throws FileNotFoundException
+     * @throws InvalidCredentialException
+     * @throws JsonException
+     */
+    public static function fromJson(string $json, array $scopes = []): self
+    {
+        $tokenSource = new self(null, $scopes);
+        $tokenSource->parse($json);
+
+        return $tokenSource;
     }
 
     public function getProject(): ?string

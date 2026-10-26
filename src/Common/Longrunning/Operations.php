@@ -11,18 +11,93 @@ use Cbws\Sdk\Common\Longrunning\Model\Operation;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\CancelOperationRequest;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\DeleteOperationRequest;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\GetOperationRequest;
+use Cbws\Sdk\Common\Longrunning\V1alpha1\ListOperationsRequest;
+use Cbws\Sdk\Common\Longrunning\V1alpha1\ListOperationsResponse;
 use Cbws\Sdk\Common\Longrunning\V1alpha1\WaitOperationRequest;
+use Cbws\Sdk\Common\ReconnectProxy;
+use Closure;
+use Exception;
 use Fiber;
 use Generator;
 use Google\Protobuf\GPBEmpty;
+use Google\Protobuf\Internal\Message;
+use Psr\Log\LoggerInterface;
 
 class Operations
 {
-    public function __construct(protected OperationsClient $client) {}
+    /**
+     * The client getter returns the last created LRO client, this can have a closed channel.
+     *
+     * @var Closure(): OperationsClient
+     */
+    protected Closure $clientGetter;
 
-    public function __destruct()
+    /**
+     * The client factory instantiates a new LRO client when needed by the reconnect proxy.
+     *
+     * @var Closure(): OperationsClient
+     */
+    protected Closure $clientFactory;
+
+    protected ?LoggerInterface $logger;
+
+    /**
+     * @param Closure(): OperationsClient $clientGetter
+     * @param Closure(): OperationsClient $clientFactory
+     */
+    public function __construct(Closure $clientGetter, Closure $clientFactory, ?LoggerInterface $logger = null)
     {
-        $this->client->close();
+        $this->clientGetter = $clientGetter;
+        $this->clientFactory = $clientFactory;
+        $this->logger = $logger;
+    }
+
+    /**
+     * List operations.
+     *
+     * @throws StatusException
+     */
+    public function list(ListOperationsRequest $request = new ListOperationsRequest()): ListOperationsResponse
+    {
+        /** @var ReconnectProxy<OperationsClient, GrpcOperation> $grpcClient */
+        $grpcClient = new ReconnectProxy(($this->clientGetter)(), $this->clientFactory, 3, $this->logger);
+
+        /**
+         * @var \Cbws\Grpc\Longrunning\ListOperationsResponse $data
+         * @var object{ code: int, details: string }          $status
+         */
+        [$data, $status] = $grpcClient->ListOperations($request->toGrpc())->wait();
+
+        if ($status->code !== 0) {
+            throw StatusException::fromStatus($status);
+        }
+
+        return new ListOperationsResponse($data, $this);
+    }
+
+    /**
+     * @yield Operation
+     *
+     * @return Generator<Operation<covariant MetadataInterface<Message>, covariant ResponseInterface<Message>>>
+     *
+     * @throws StatusException
+     * @throws Exception
+     */
+    public function paginate(ListOperationsRequest $request = new ListOperationsRequest()): Generator
+    {
+        $nextPageToken = null;
+
+        do {
+            $request = $request->withPageToken($nextPageToken);
+
+            $response = $this->list($request);
+
+            foreach ($response->getOperations() as $operation) {
+                yield $operation;
+            }
+
+            $nextPageToken = $response->getNextPageToken();
+        } while ($response->getNextPageToken() !== null);
     }
 
     /**
@@ -38,12 +113,15 @@ class Operations
      */
     public function getOperation(string $name, string $metadataType, string $responseType, ?GetOperationRequest $request = null): Operation
     {
+        /** @var ReconnectProxy<OperationsClient, GrpcOperation> $grpcClient */
+        $grpcClient = new ReconnectProxy(($this->clientGetter)(), $this->clientFactory, 3, $this->logger);
+
         if ($request === null) {
             $request = new GetOperationRequest();
         }
 
         $request = $request->withName($name);
-        $call = $this->client->GetOperation($request->toGrpc());
+        $call = $grpcClient->GetOperation($request->toGrpc());
 
         /** @var GrpcOperation $data */
         /** @var object{ code: int, details: string } $status */
@@ -72,10 +150,13 @@ class Operations
      */
     public function waitOperation(string $name, string $metadataType, string $responseType, int $timeoutMilliseconds = 1000, ?WaitOperationRequest $request = null): Operation
     {
+        /** @var ReconnectProxy<OperationsClient, GrpcOperation> $grpcClient */
+        $grpcClient = new ReconnectProxy(($this->clientGetter)(), $this->clientFactory, 3, $this->logger);
+
         $request ??= new WaitOperationRequest();
 
         $request = $request->withName($name)->withTimeout($timeoutMilliseconds);
-        $call = $this->client->WaitOperation($request->toGrpc());
+        $call = $grpcClient->WaitOperation($request->toGrpc());
 
         /** @var GrpcOperation $data */
         /** @var object{ code: int, details: string } $status */
@@ -94,10 +175,13 @@ class Operations
      */
     public function deleteOperation(string $name, ?DeleteOperationRequest $request = null): void
     {
+        /** @var ReconnectProxy<OperationsClient, Message> $grpcClient */
+        $grpcClient = new ReconnectProxy(($this->clientGetter)(), $this->clientFactory, 3, $this->logger);
+
         $request ??= new DeleteOperationRequest();
 
         $request = $request->withName($name);
-        $call = $this->client->DeleteOperation($request->toGrpc());
+        $call = $grpcClient->DeleteOperation($request->toGrpc());
 
         /** @var GPBEmpty $data */
         /** @var object{ code: int, details: string } $status */
@@ -113,12 +197,15 @@ class Operations
      */
     public function cancelOperation(string $name, ?CancelOperationRequest $request = null): void
     {
+        /** @var ReconnectProxy<OperationsClient, Message> $grpcClient */
+        $grpcClient = new ReconnectProxy(($this->clientGetter)(), $this->clientFactory, 3, $this->logger);
+
         if ($request === null) {
             $request = new CancelOperationRequest();
         }
 
         $request = $request->withName($name);
-        $call = $this->client->CancelOperation($request->toGrpc());
+        $call = $grpcClient->CancelOperation($request->toGrpc());
 
         /** @var GPBEmpty $data */
         /** @var object{ code: int, details: string } $status */

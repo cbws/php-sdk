@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Cbws\Sdk\Auth\TokenSources;
 
 use Cbws\Sdk\Auth\Oauth2\Cbws;
+use Cbws\Sdk\Common\Exception\HomeNotDefinedException;
 use DateTimeImmutable;
 use GuzzleHttp\Exception\GuzzleException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 use const DIRECTORY_SEPARATOR;
@@ -40,6 +42,8 @@ class CLITokenSource implements TokenSourceContract
     /**
      * @param non-empty-string $filename
      * @param string[]         $scopes
+     *
+     * @throws ParseException
      */
     public function __construct(string $filename, array $scopes = [])
     {
@@ -52,9 +56,12 @@ class CLITokenSource implements TokenSourceContract
 
     /**
      * @param non-empty-string $filename
+     *
+     * @throws ParseException
      */
     protected function parseFile(string $filename): void
     {
+        /** @var array{project_name?: string, 'oauth_token': array{'accesstoken': string, 'expiresin': int, 'expiry': non-falsy-string|null, 'refreshtoken': string|null, 'tokentype': string}} $object */
         $object = Yaml::parseFile($filename);
         assert(is_array($object));
 
@@ -132,15 +139,23 @@ class CLITokenSource implements TokenSourceContract
 
     /**
      * @return non-empty-string
+     *
+     * @throws HomeNotDefinedException
      */
     public static function getFileLocation(): string
     {
-        if (getenv('CBWS_CONFIG_FILE')) {
-            return getenv('CBWS_CONFIG_FILE');
+        $configFile = getenv('CBWS_CONFIG_FILE');
+
+        if (!empty($configFile)) {
+            return $configFile;
         }
 
+        if (!isset($_SERVER['HOME']) && !is_string($_SERVER['HOME'])) {
+            throw new HomeNotDefinedException();
+        }
+
+        /** @var string $home */
         $home = $_SERVER['HOME'];
-        assert(is_string($home));
 
         return $home.DIRECTORY_SEPARATOR.'.cbws.yaml';
     }

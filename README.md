@@ -27,7 +27,33 @@ The recommended way to install composer packages is:
 composer require cbws/sdk
 ```
 
-Note you will need the PHP gRPC extension and the PHP protobuf extensions.
+The SDK does not need a PHP extension. The `grpc` extension is optional; see [Transports](#transports).
+
+## Transports
+
+The SDK calls the CBWS API in one of two ways:
+
+- **Native gRPC** through the PHP `grpc` extension. The SDK uses it when the extension is loaded.
+- **gRPC-Web** over HTTPS, which needs no extension. The SDK uses it when the `grpc` extension is not loaded. The
+  requests go through Guzzle, which uses the `curl` extension when it is installed.
+
+Both send the same requests and give the same responses. The SDK sends the access token with every call as an
+`authorization` header, on both transports.
+
+To use a specific transport, give it to the client constructor, or call `withTransportType()` before the first request:
+
+```php
+use Cbws\Sdk\Common\Client;
+
+// Use gRPC-Web, also when the grpc extension is installed but unreliable
+$compute = new \Cbws\Sdk\Compute\Client('some-project', null, null, Client::TRANSPORT_GRPC_WEB);
+
+// The same, with the setter
+$compute = (new \Cbws\Sdk\Compute\Client('some-project'))->withTransportType(Client::TRANSPORT_GRPC_WEB);
+```
+
+`Client::TRANSPORT_GRPC` forces native gRPC, which fails when the extension is not loaded. `null` restores the
+automatic choice.
 
 ## Usage
 
@@ -219,3 +245,39 @@ foreach ($compute->pollOperation($operation->getName()) as $operation) {
     print_r($operation);
 }
 ```
+
+#### Images and image families
+
+An image is an operating system that machines are installed from. An image family is a named series of images, such as
+all the images of one operating system release. A family resolves to its current image for a machine type, because a
+family can hold different images for different machine types.
+
+The SDK reads images and families from the client's project. To read them from another project, give that project to
+the request with `withProject()`.
+
+```php
+use Cbws\Sdk\Compute\Requests\GetImageFromFamilyRequest;
+use Cbws\Sdk\Compute\Requests\ListImageFamiliesRequest;
+
+// List the images of the client's project
+foreach ($compute->images()->paginate() as $image) {
+    echo $image->getName(), ' ', $image->getFamily() ?? '(no family)', PHP_EOL;
+}
+
+// List the image families of another project
+foreach ($compute->imageFamilies()->paginate((new ListImageFamiliesRequest())->withProject('other-project')) as $family) {
+    echo $family->getName(), PHP_EOL;
+}
+
+// Get the image that a machine of type g4.2 gets from the family now. The machine type is an id, such as `g4.2`,
+// or a resource name, such as `zones/nl-ein-1/types/g4.2`.
+$image = $compute->imageFamilies()->getImage(
+    'ubuntu-2404-lts',
+    'g4.2',
+    (new GetImageFromFamilyRequest())->withProject('other-project'),
+);
+```
+
+`images()->get()` and `imageFamilies()->get()` take the id of the image or family and accept a request with
+`withProject()` in the same way. A family from a list or `get()` also has a `getImage()` method that uses the family's
+own project.

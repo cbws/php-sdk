@@ -8,8 +8,10 @@ use Cbws\Sdk\Auth\TokenSources\CLITokenSource;
 use Cbws\Sdk\Auth\TokenSources\ServiceAccountTokenSource;
 use Cbws\Sdk\Auth\TokenSources\TokenSourceContract;
 use Cbws\Sdk\Common\Exception\FileNotFoundException;
+use Cbws\Sdk\Common\Exception\HomeNotDefinedException;
 use Cbws\Sdk\Common\Exception\InvalidCredentialException;
 use JsonException;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 class Credentials
 {
@@ -28,23 +30,33 @@ class Credentials
     /**
      * @param string[] $scopes
      *
-     * @throws FileNotFoundException|InvalidCredentialException|JsonException
+     * @throws FileNotFoundException|InvalidCredentialException|JsonException|ParseException
      */
     public static function findDefault(array $scopes = []): ?self
     {
         // First, try the environment variable.
-        if (!empty(getenv('CBWS_CREDENTIALS'))) {
-            return self::fromCredentialsFile(getenv('CBWS_CREDENTIALS'), $scopes);
+        $credentialsFile = getenv('CBWS_CREDENTIALS');
+
+        if (!empty($credentialsFile)) {
+            return self::fromCredentialsFile($credentialsFile, $scopes);
         }
 
         // Second, try a well-known file.
-        if (file_exists(ServiceAccountTokenSource::getFileLocation())) {
-            return self::fromCredentialsFile(ServiceAccountTokenSource::getFileLocation(), $scopes);
+        try {
+            if (file_exists(ServiceAccountTokenSource::getFileLocation())) {
+                return self::fromCredentialsFile(ServiceAccountTokenSource::getFileLocation(), $scopes);
+            }
+        } catch (HomeNotDefinedException) {
+            // If home is not defined then just fall through to the next method
         }
 
         // Third, try the CBWS CLI config
-        if (file_exists(CLITokenSource::getFileLocation())) {
-            return self::fromCliConfigFile(CLITokenSource::getFileLocation(), $scopes);
+        try {
+            if (file_exists(CLITokenSource::getFileLocation())) {
+                return self::fromCliConfigFile(CLITokenSource::getFileLocation(), $scopes);
+            }
+        } catch (HomeNotDefinedException) {
+            // If home is not defined then just fall through to the next method
         }
 
         return null;
@@ -53,10 +65,23 @@ class Credentials
     /**
      * @param non-empty-string $filename
      * @param string[]         $scopes
+     *
+     * @throws ParseException
      */
     public static function fromCliConfigFile(string $filename, array $scopes = []): self
     {
         return new self(new CLITokenSource($filename, $scopes));
+    }
+
+    /**
+     * @param non-empty-string $json
+     * @param string[]         $scopes
+     *
+     * @throws InvalidCredentialException|JsonException
+     */
+    public static function fromCredential(string $json, array $scopes = []): self
+    {
+        return new self(ServiceAccountTokenSource::fromJson($json, $scopes));
     }
 
     /**

@@ -20,8 +20,10 @@ class ListMachinesResponse
     {
         $machines = [];
 
-        /** @var MachineGrpc $machine */
-        foreach ($this->object->getMachines() as $machine) {
+        /** @var \Google\Protobuf\RepeatedField<MachineGrpc> $grpcMachines */
+        $grpcMachines = $this->object->getMachines();
+
+        foreach ($grpcMachines as $machine) {
             $machines[] = new Machine($machine, $this->client);
         }
 

@@ -104,6 +104,11 @@ class Machine
         return $this;
     }
 
+    public function getAddress(): string
+    {
+        return $this->object->getAddress();
+    }
+
     public function getUserdata(): ?string
     {
         return ($this->object->getUserdata()) ?: null;

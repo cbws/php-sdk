@@ -12,15 +12,15 @@ trait OperationsTrait
 
     protected function getOperationsClient(): OperationsClient
     {
-        if ($this->operationsClient !== null) {
-            return $this->operationsClient;
+        if ($this->operationsClient === null) {
+            return $this->createOperationsClient();
         }
 
-        $channelCredentials = $this->getChannelCredentials($this->getCallCredentials());
-        $this->operationsClient = new OperationsClient($this->getEndpoint(), [
-            'credentials' => $channelCredentials,
-        ]);
-
         return $this->operationsClient;
+    }
+
+    protected function createOperationsClient(): OperationsClient
+    {
+        return $this->operationsClient = new OperationsClient($this->replaceTransport($this->operationsClient?->getTransport()));
     }
 }
