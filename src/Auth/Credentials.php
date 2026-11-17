@@ -6,6 +6,7 @@ namespace Cbws\Sdk\Auth;
 
 use Cbws\Sdk\Auth\TokenSources\CLITokenSource;
 use Cbws\Sdk\Auth\TokenSources\ServiceAccountTokenSource;
+use Cbws\Sdk\Auth\TokenSources\StaticTokenSource;
 use Cbws\Sdk\Auth\TokenSources\TokenSourceContract;
 use Cbws\Sdk\Common\Exception\FileNotFoundException;
 use Cbws\Sdk\Common\Exception\HomeNotDefinedException;
@@ -34,14 +35,22 @@ class Credentials
      */
     public static function findDefault(array $scopes = []): ?self
     {
-        // First, try the environment variable.
+        // First, try a bare access token, the variable the CBWS CLI reads too. It was minted by whoever set it, so
+        // the scopes are not applied to it.
+        $accessToken = getenv('CBWS_ACCESS_TOKEN');
+
+        if (is_string($accessToken) && $accessToken !== '') {
+            return self::fromAccessToken($accessToken);
+        }
+
+        // Second, try the environment variable.
         $credentialsFile = getenv('CBWS_CREDENTIALS');
 
         if (!empty($credentialsFile)) {
             return self::fromCredentialsFile($credentialsFile, $scopes);
         }
 
-        // Second, try a well-known file.
+        // Third, try a well-known file.
         try {
             if (file_exists(ServiceAccountTokenSource::getFileLocation())) {
                 return self::fromCredentialsFile(ServiceAccountTokenSource::getFileLocation(), $scopes);
@@ -50,7 +59,7 @@ class Credentials
             // If home is not defined then just fall through to the next method
         }
 
-        // Third, try the CBWS CLI config
+        // Fourth, try the CBWS CLI config
         try {
             if (file_exists(CLITokenSource::getFileLocation())) {
                 return self::fromCliConfigFile(CLITokenSource::getFileLocation(), $scopes);
@@ -60,6 +69,18 @@ class Credentials
         }
 
         return null;
+    }
+
+    /**
+     * Credentials from an access token obtained elsewhere, such as from Vault. The token is not refreshed, so the
+     * caller supplies a new one before it expires. A bare token names no project, so give the project here or to the
+     * client.
+     *
+     * @param non-empty-string $accessToken
+     */
+    public static function fromAccessToken(string $accessToken, ?string $project = null): self
+    {
+        return new self(new StaticTokenSource($accessToken, $project));
     }
 
     /**

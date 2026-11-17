@@ -55,6 +55,29 @@ $compute = (new \Cbws\Sdk\Compute\Client('some-project'))->withTransportType(Cli
 `Client::TRANSPORT_GRPC` forces native gRPC, which fails when the extension is not loaded. `null` restores the
 automatic choice.
 
+## Credentials
+
+When you do not give credentials to a client, the SDK uses the first of these that it finds:
+
+1. An access token in the `CBWS_ACCESS_TOKEN` environment variable.
+2. The service account key file that the `CBWS_CREDENTIALS` environment variable names.
+3. The service account key file `~/.config/cbws/cbws.json`.
+4. The CBWS CLI configuration, `~/.cbws.yaml`, or the file that `CBWS_CONFIG_FILE` names.
+
+Use an access token when a different system gets the token for you, for example a pipeline that reads it from Vault.
+The SDK does not refresh an access token. Supply a new token before the token expires. An access token does not
+identify a project, so give the project to the client:
+
+```php
+use Cbws\Sdk\Auth\Credentials;
+
+// From the CBWS_ACCESS_TOKEN environment variable
+$compute = new \Cbws\Sdk\Compute\Client('some-project');
+
+// From a value that you supply
+$compute = new \Cbws\Sdk\Compute\Client('some-project', Credentials::fromAccessToken($token));
+```
+
 ## Usage
 
 ### Long-running operations
