@@ -16,7 +16,7 @@
         "lcobucci/jwt": "^5.0",
         "google/common-protos": "^4.0",
         "ramsey/uuid": "^4.0",
-        "cbws/php-cbws-grpc": ">=0.98 <1",
+        "cbws/php-cbws-grpc": ">=0.121.1 <1",
         "psr/log": "^3.0"
     },
     "suggest": {

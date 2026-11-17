@@ -176,4 +176,14 @@ class ServiceAccountTokenSource implements TokenSourceContract
     {
         return $this->projectName;
     }
+
+    /**
+     * The email address of the service account the key belongs to.
+     *
+     * @return non-empty-string
+     */
+    public function getClientEmail(): string
+    {
+        return $this->clientEmail;
+    }
 }
