@@ -31,7 +31,23 @@ abstract class Client
      */
     public const TRANSPORT_GRPC_WEB = 'grpc-web';
 
+    /**
+     * The gRPC metadata key that names the project a call is attributed to. Over HTTP it is the header
+     * X-CBWS-Project-ID. Pass it in a call's metadata to attribute that one call to another project.
+     */
+    public const QUOTA_PROJECT_HEADER = 'x-cbws-project-id';
+
+    /**
+     * The environment variable holding the project for a client built without withQuotaProject().
+     */
+    public const QUOTA_PROJECT_ENV_VAR = 'CBWS_PROJECT_ID';
+
     protected string $project;
+
+    /**
+     * The project the client's calls are attributed to, see withQuotaProject().
+     */
+    protected ?string $quotaProject = null;
 
     protected Credentials $credentials;
 
@@ -86,6 +102,41 @@ abstract class Client
 
     public function getProject(): string
     {
+        return $this->project;
+    }
+
+    /**
+     * Attribute the client's calls to a project. A service uses it for a call that names no project itself, such as
+     * getting a machine type, and ignores it for a call on a resource in a project, which belongs to that resource's
+     * project. The caller needs permission to use the service in the project, or the service refuses the call.
+     *
+     * Without it the client takes the project from QUOTA_PROJECT_ENV_VAR, and otherwise uses its own project, the
+     * same one the CBWS CLI attributes its calls to. Passing QUOTA_PROJECT_HEADER in a call's metadata overrides the
+     * project for that call.
+     *
+     * It applies to the transports created after the call, so set it before the first request.
+     *
+     * @return static
+     */
+    public function withQuotaProject(?string $project): self
+    {
+        $this->quotaProject = $project;
+
+        return $this;
+    }
+
+    public function getQuotaProject(): string
+    {
+        if ($this->quotaProject !== null && $this->quotaProject !== '') {
+            return $this->quotaProject;
+        }
+
+        $project = getenv(self::QUOTA_PROJECT_ENV_VAR);
+
+        if (is_string($project) && $project !== '') {
+            return $project;
+        }
+
         return $this->project;
     }
 
@@ -162,11 +213,16 @@ abstract class Client
     public function getTransportOptions(): array
     {
         $tokenSource = $this->getTokenSource();
+        $quotaProject = $this->getQuotaProject();
 
         /**
          * Runs before every call. The token source caches the token and refreshes it when it expires, so this costs
          * nothing on most calls. It holds the token source rather than this client, so a transport never keeps its
          * client alive.
+         *
+         * The quota project is sent on every call rather than only on calls that name no project, because the service
+         * ignores it for a call that does, and a list of such calls kept here would miss every call a service adds
+         * later. A project already in the call's metadata wins.
          *
          * @param array<string, string[]> $metadata
          *
@@ -174,6 +230,7 @@ abstract class Client
          */
         $metadataProvider = static fn (array $metadata): array => $metadata + [
             'authorization' => ['Bearer '.$tokenSource->token()->getToken()],
+            self::QUOTA_PROJECT_HEADER => [$quotaProject],
         ];
 
         $options = [

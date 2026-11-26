@@ -7,6 +7,8 @@ namespace Cbws\Sdk\Auth\TokenSources;
 use Cbws\Sdk\Auth\Oauth2\Cbws;
 use Cbws\Sdk\Common\Exception\HomeNotDefinedException;
 use DateTimeImmutable;
+use DateTimeInterface;
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
@@ -25,6 +27,12 @@ class CLITokenSource implements TokenSourceContract
     protected int $expiresIn;
 
     protected ?DateTimeImmutable $expiry = null;
+
+    /**
+     * The CLI writes Go's zero time for a token without an expiry, which Go's oauth2 treats as never
+     * expiring. A missing expiry is something else, an unknown one, and is refreshed straight away.
+     */
+    protected bool $neverExpires = false;
 
     protected ?string $refreshToken = null;
 
@@ -61,8 +69,9 @@ class CLITokenSource implements TokenSourceContract
      */
     protected function parseFile(string $filename): void
     {
-        /** @var array{project_name?: string, 'oauth_token': array{'accesstoken': string, 'expiresin': int, 'expiry': non-falsy-string|null, 'refreshtoken': string|null, 'tokentype': string}} $object */
-        $object = Yaml::parseFile($filename);
+        // The CLI writes the expiry as an unquoted timestamp, which YAML would otherwise turn into an int
+        /** @var array{project_name?: string, 'oauth_token': array{'accesstoken': string, 'expiresin': int, 'expiry': DateTimeInterface|int|string|null, 'refreshtoken': string|null, 'tokentype': string}} $object */
+        $object = Yaml::parseFile($filename, Yaml::PARSE_DATETIME);
         assert(is_array($object));
 
         $token = $object['oauth_token'];
@@ -72,12 +81,41 @@ class CLITokenSource implements TokenSourceContract
         $this->accessToken = $token['accesstoken'];
         $this->refreshToken = $token['refreshtoken'] ?? null;
 
-        if (isset($token['expiry'])) {
-            $this->expiry = DateTimeImmutable::createFromFormat(DATE_RFC3339_EXTENDED, $token['expiry']) ?: null;
+        $expiry = self::parseExpiry($token['expiry'] ?? null);
+
+        if ($expiry !== null && (int) $expiry->format('Y') <= 1) {
+            $this->neverExpires = true;
+        } else {
+            $this->expiry = $expiry;
         }
         $this->expiresIn = $token['expiresin'] ?? null;
         $this->tokenType = $token['tokentype'] ?? 'bearer';
         $this->projectName = $object['project_name'] ?? null;
+    }
+
+    /**
+     * An expiry in any form the CLI config has held it: a timestamp YAML parsed, or a string or Unix
+     * time from a config written by something else.
+     */
+    protected static function parseExpiry(mixed $expiry): ?DateTimeImmutable
+    {
+        if ($expiry instanceof DateTimeInterface) {
+            return DateTimeImmutable::createFromInterface($expiry);
+        }
+
+        if (is_int($expiry)) {
+            return (new DateTimeImmutable())->setTimestamp($expiry);
+        }
+
+        if (is_string($expiry) && $expiry !== '') {
+            try {
+                return new DateTimeImmutable($expiry);
+            } catch (Exception) {
+                return null;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -90,7 +128,7 @@ class CLITokenSource implements TokenSourceContract
             'oauth_token' => [
                 'accesstoken' => $this->accessToken,
                 'expiresin' => $this->expiresIn,
-                'expiry' => $this->expiry?->format(DATE_RFC3339_EXTENDED),
+                'expiry' => $this->neverExpires ? '0001-01-01T00:00:00Z' : $this->expiry?->format(DATE_RFC3339_EXTENDED),
                 'refreshtoken' => $this->refreshToken,
                 'tokentype' => $this->tokenType,
             ],
@@ -105,7 +143,7 @@ class CLITokenSource implements TokenSourceContract
     {
         $token = $this->getConfigToken();
 
-        if (!$token->hasExpired()) {
+        if ($token->getExpires() === null || !$token->hasExpired()) {
             return $token;
         }
 
@@ -123,6 +161,13 @@ class CLITokenSource implements TokenSourceContract
 
     protected function getConfigToken(): AccessTokenInterface
     {
+        if ($this->neverExpires) {
+            return new AccessToken([
+                'access_token' => $this->accessToken,
+                'refresh_token' => $this->refreshToken,
+            ]);
+        }
+
         return new AccessToken([
             'access_token' => $this->accessToken,
             'refresh_token' => $this->refreshToken,
@@ -135,6 +180,7 @@ class CLITokenSource implements TokenSourceContract
         $this->accessToken = $token->getToken();
         $this->refreshToken = $token->getRefreshToken();
         $this->expiry = $token->getExpires() ? (new DateTimeImmutable())->setTimestamp($token->getExpires()) : null;
+        $this->neverExpires = $this->expiry === null;
     }
 
     /**

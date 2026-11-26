@@ -48,7 +48,7 @@ class StaticAccessTokenTest extends TestCase
 
         self::assertSame('project-1', $client->getProject());
         self::assertIsCallable($metadataProvider);
-        self::assertSame(['authorization' => ['Bearer at-1']], $metadataProvider([]));
+        self::assertSame(['authorization' => ['Bearer at-1'], 'x-cbws-project-id' => ['project-1']], $metadataProvider([]));
     }
 
     /**

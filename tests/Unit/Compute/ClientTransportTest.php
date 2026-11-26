@@ -105,7 +105,55 @@ class ClientTransportTest extends TestCase
         self::assertSame([
             'idempotency-key' => ['key'],
             'authorization' => ['Bearer test-token'],
+            'x-cbws-project-id' => ['test-project'],
         ], $options['metadata_provider'](['idempotency-key' => ['key']], '/cbws.compute.v1alpha1.ComputeService/ListMachines'));
+    }
+
+    /**
+     * A call that names no project, such as getting a machine type, is attributed to the client's own project unless
+     * told otherwise, which is what the CBWS CLI does too.
+     */
+    public function test_calls_are_attributed_to_the_client_project_by_default(): void
+    {
+        self::assertSame('test-project', $this->client(null)->getQuotaProject());
+    }
+
+    public function test_the_environment_attributes_calls_to_another_project(): void
+    {
+        putenv(BaseClient::QUOTA_PROJECT_ENV_VAR.'=env-project');
+
+        try {
+            self::assertSame('env-project', $this->client(null)->getQuotaProject());
+        } finally {
+            putenv(BaseClient::QUOTA_PROJECT_ENV_VAR);
+        }
+    }
+
+    public function test_an_explicit_quota_project_wins_over_the_environment(): void
+    {
+        putenv(BaseClient::QUOTA_PROJECT_ENV_VAR.'=env-project');
+
+        try {
+            $client = $this->client(null)->withQuotaProject('billing-project');
+
+            $metadataProvider = $client->getTransportOptions()['metadata_provider'];
+
+            self::assertSame('billing-project', $client->getQuotaProject());
+            self::assertIsCallable($metadataProvider);
+            self::assertSame(['billing-project'], $metadataProvider([])['x-cbws-project-id']);
+        } finally {
+            putenv(BaseClient::QUOTA_PROJECT_ENV_VAR);
+        }
+    }
+
+    public function test_a_project_in_the_call_metadata_wins(): void
+    {
+        $metadataProvider = $this->client(null)->getTransportOptions()['metadata_provider'];
+
+        self::assertIsCallable($metadataProvider);
+        self::assertSame(['call-project'], $metadataProvider([
+            BaseClient::QUOTA_PROJECT_HEADER => ['call-project'],
+        ])['x-cbws-project-id']);
     }
 
     public function test_list_machines_over_grpc_web(): void
@@ -133,6 +181,7 @@ class ClientTransportTest extends TestCase
         self::assertSame('https://compute.cbws.cloud/cbws.compute.v1alpha1.ComputeService/ListMachines', (string) $request->getUri());
         self::assertSame('Bearer test-token', $request->getHeaderLine('authorization'));
         self::assertSame('application/grpc-web+proto', $request->getHeaderLine('content-type'));
+        self::assertSame('test-project', $request->getHeaderLine('x-cbws-project-id'));
         self::assertStringContainsString($client->getSdkUserAgent(), $request->getHeaderLine('user-agent'));
     }
 
