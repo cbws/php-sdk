@@ -60,7 +60,8 @@ automatic choice.
 When you do not give credentials to a client, the SDK uses the first of these that it finds:
 
 1. An access token in the `CBWS_ACCESS_TOKEN` environment variable.
-2. The service account key file that the `CBWS_CREDENTIALS` environment variable names.
+2. The service account key file or external account configuration that the `CBWS_CREDENTIALS` environment variable
+   names.
 3. The service account key file `~/.config/cbws/cbws.json`.
 4. The CBWS CLI configuration, `~/.cbws.yaml`, or the file that `CBWS_CONFIG_FILE` names.
 
@@ -76,6 +77,49 @@ $compute = new \Cbws\Sdk\Compute\Client('some-project');
 
 // From a value that you supply
 $compute = new \Cbws\Sdk\Compute\Client('some-project', Credentials::fromAccessToken($token));
+```
+
+### External accounts
+
+A workload that runs outside CBWS, such as a GitLab CI job, can get CBWS tokens without a service account key. The SDK
+sends a token from the platform of the workload, the subject token, to CBWS STS. When the configuration names a service
+account, the SDK then sends the STS token to IAM, and IAM returns an access token for that account. The configuration
+file is the same one that the Go SDK reads. Set `CBWS_CREDENTIALS` to its path:
+
+```json
+{
+  "type": "external_account",
+  "audience": "projects/my-project/workloadIdentityPools/ci/providers/gitlab",
+  "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
+  "service_account_impersonation": "projects/my-project/serviceAccounts/deploy@my-project.iam-sa.cbws.xyz",
+  "credential_source": {
+    "file": "/builds/.cbws-id-token"
+  }
+}
+```
+
+The `credential_source` can be a `file`, a `url` with `headers`, or an `executable` with a `command` and a
+`timeout_millis`. Each one can have a `format` of `{"type": "text"}` or
+`{"type": "json", "subject_token_field_name": "value"}`. The SDK runs an executable only when
+`CBWS_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES=1` is set.
+
+The SDK reads the subject token again for each exchange, because CI tokens and projected tokens rotate. It does not put
+the subject token or the tokens that it gets into an exception message.
+
+To supply the subject token in code, implement `SubjectTokenSupplier`:
+
+```php
+use Cbws\Sdk\Auth\Credentials;
+use Cbws\Sdk\Auth\ExternalAccount\Config;
+
+$config = new Config(
+    'projects/my-project/workloadIdentityPools/ci/providers/gitlab',
+    Config::TOKEN_TYPE_JWT,
+    $supplier,
+    serviceAccountImpersonation: 'projects/my-project/serviceAccounts/deploy@my-project.iam-sa.cbws.xyz',
+);
+
+$compute = new \Cbws\Sdk\Compute\Client(null, Credentials::fromExternalAccount($config, ['cbws.compute']));
 ```
 
 ## Usage

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Cbws\Sdk\Auth;
 
+use Cbws\Sdk\Auth\ExternalAccount\Config;
 use Cbws\Sdk\Auth\TokenSources\CLITokenSource;
+use Cbws\Sdk\Auth\TokenSources\ExternalAccountTokenSource;
 use Cbws\Sdk\Auth\TokenSources\ServiceAccountTokenSource;
 use Cbws\Sdk\Auth\TokenSources\StaticTokenSource;
 use Cbws\Sdk\Auth\TokenSources\TokenSourceContract;
@@ -102,6 +104,19 @@ class Credentials
      */
     public static function fromCredential(string $json, array $scopes = []): self
     {
+        // The type field selects the kind of credentials. A service account key is "service_account", and is also
+        // what a file without a type is read as.
+        $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        $type = is_array($data) ? ($data['type'] ?? null) : null;
+
+        if ($type === Config::TYPE) {
+            return self::fromExternalAccount(Config::fromJson($json), $scopes);
+        }
+
+        if ($type !== null && $type !== 'service_account') {
+            throw new InvalidCredentialException(sprintf('Unknown credential type %s, expected service_account or %s', json_encode($type), Config::TYPE));
+        }
+
         return new self(ServiceAccountTokenSource::fromJson($json, $scopes));
     }
 
@@ -113,6 +128,23 @@ class Credentials
      */
     public static function fromCredentialsFile(string $filename, array $scopes = []): self
     {
-        return new self(new ServiceAccountTokenSource($filename, $scopes));
+        $json = @file_get_contents($filename);
+
+        if (!$json) {
+            throw new FileNotFoundException("File not found: {$filename}");
+        }
+
+        return self::fromCredential($json, $scopes);
+    }
+
+    /**
+     * Credentials for a workload outside CBWS, which exchanges a token from its own platform at STS. Build the
+     * configuration in code to supply the subject token with a SubjectTokenSupplier.
+     *
+     * @param string[] $scopes the scopes of an impersonated account's token
+     */
+    public static function fromExternalAccount(Config $config, array $scopes = []): self
+    {
+        return new self(new ExternalAccountTokenSource($config, $scopes));
     }
 }
